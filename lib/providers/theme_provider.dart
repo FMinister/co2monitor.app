@@ -11,16 +11,16 @@ class ThemeProvider with ChangeNotifier {
   Future<void> setTheme(bool themeMode) async {
     final prefs = await SharedPreferences.getInstance();
     _isDark = themeMode;
-    prefs.setBool("darkMode", themeMode);
+    prefs.setBool("co2DarkMode", themeMode);
     notifyListeners();
   }
 
   Future<bool> getTheme() async {
     final prefs = await SharedPreferences.getInstance();
-    if (!prefs.containsKey("darkMode")) {
-      prefs.setBool("darkMode", _isDark);
+    if (!prefs.containsKey("co2DarkMode")) {
+      prefs.setBool("co2DarkMode", _isDark);
     } else {
-      _isDark = prefs.getBool("darkMode")!;
+      _isDark = prefs.getBool("co2DarkMode")!;
     }
 
     return _isDark;
