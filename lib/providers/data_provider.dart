@@ -28,8 +28,8 @@ class Co2Data {
       );
 }
 
-class Data with ChangeNotifier {
-  Data(this._data);
+class DataProvider with ChangeNotifier {
+  DataProvider(this._data);
 
   List<Co2Data> _data = [];
 
@@ -39,15 +39,17 @@ class Data with ChangeNotifier {
 
   Future<void> fetchAndSetData() async {
     final url = Uri.http(
-      "http://192.168.178.33:8008",
+      "192.168.178.33:8008",
       "/api/CO2AndTempDataByDays/1",
     );
     try {
       final response = await http.get(url);
       _data = co2DataFromJson(response.body);
-
+      print(response.statusCode);
       notifyListeners();
     } catch (error) {
+      print(error);
+      _data = [];
       rethrow;
     }
   }

@@ -1,3 +1,4 @@
+import 'package:co2app/providers/data_provider.dart';
 import 'package:co2app/screens/line_chart_screen.dart';
 import 'package:co2app/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (_) => ThemeProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => DataProvider([]),
         ),
       ],
       child: Consumer<ThemeProvider>(
