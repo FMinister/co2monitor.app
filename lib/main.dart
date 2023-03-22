@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
           theme: themeProv.isDark
               ? ThemeData(useMaterial3: true, colorScheme: lightColorScheme)
               : ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-          home: const LineChartScreen(title: 'Flutter Demo Home Page'),
+          home: const LineChartScreen(),
         ),
       ),
     );
