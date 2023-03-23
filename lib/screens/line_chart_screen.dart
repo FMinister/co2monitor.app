@@ -19,9 +19,8 @@ class _LineChartScreenState extends State<LineChartScreen> {
 
   @override
   void initState() {
-    setState(() {
-      _isLoading = true;
-    });
+    super.initState();
+    // Do not set _isLoading to false here
     Provider.of<DataProvider>(context, listen: false)
         .fetchAndSetData()
         .then((_) {
@@ -33,8 +32,6 @@ class _LineChartScreenState extends State<LineChartScreen> {
         child: Text("An error occurred, data could not be loaded. \n$error"),
       );
     });
-    _isLoading = false;
-    super.initState();
   }
 
   void onTabTheme() {
@@ -46,6 +43,7 @@ class _LineChartScreenState extends State<LineChartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final dataProvider = Provider.of<DataProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Padding(
@@ -73,13 +71,18 @@ class _LineChartScreenState extends State<LineChartScreen> {
         ],
         automaticallyImplyLeading: false,
       ),
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            )
-          : LineChartWidget(pricePoints),
+      body: dataProvider.data.isEmpty
+          ? _isLoading
+              ? Center(
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                )
+              : Center(
+                  child: Text('No data found.'),
+                )
+         // : LineChartWidget(dataProvider.data),
+      : LineChartWidget(pricePoints),
     );
   }
 }
