@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:co2app/providers/theme_provider.dart';
+import 'package:co2app/widgets/temp_line_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -105,7 +106,7 @@ class _LineChartScreenState extends State<LineChartScreen> {
                   ),
                 ),
                 Co2LineChartWidget(dataProvider.data, 6),
-                Co2LineChartWidget(dataProvider.data, 6)
+                TempLineChartWidget(dataProvider.data, 6)
               ],
             ),
     );

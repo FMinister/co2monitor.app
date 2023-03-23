@@ -3,11 +3,11 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class Co2LineChartWidget extends StatelessWidget {
+class TempLineChartWidget extends StatelessWidget {
   final List<Co2Data> points;
   final int period;
 
-  const Co2LineChartWidget(this.points, this.period, {Key? key})
+  const TempLineChartWidget(this.points, this.period, {Key? key})
       : super(key: key);
 
   Widget _bottomTitleWidget(double value, TitleMeta meta) {
@@ -49,26 +49,29 @@ class Co2LineChartWidget extends StatelessWidget {
     );
     String text = '';
     switch (value.toInt()) {
-      case 500:
-        text = "500";
+      case 5:
+        text = "5";
         break;
-      case 1000:
-        text = '1k';
+      case 10:
+        text = '10';
         break;
-      case 1500:
-        text = '1.5k';
+      case 15:
+        text = '15';
         break;
-      case 2000:
-        text = '2k';
+      case 20:
+        text = '20';
         break;
-      case 2500:
-        text = '2.5k';
+      case 25:
+        text = '25';
         break;
-      case 3000:
-        text = '3k';
+      case 30:
+        text = '30';
         break;
-      case 3500:
-        text = '3.k';
+      case 35:
+        text = '35';
+        break;
+      case 40:
+        text = '40';
         break;
     }
 
@@ -82,8 +85,8 @@ class Co2LineChartWidget extends StatelessWidget {
     );
   }
 
-  double getMaxCo2Value() {
-    var max = points.reduce((c, n) => c.co2 > n.co2 ? c : n).co2.toDouble();
+  double _getMaxTempValue() {
+    var max = points.reduce((c, n) => c.temp > n.temp ? c : n).temp.toDouble();
     return max;
   }
 
@@ -108,57 +111,18 @@ class Co2LineChartWidget extends StatelessWidget {
                         .map(
                           (point) => FlSpot(
                             points.indexOf(point).toDouble(),
-                            point.co2.toDouble(),
+                            point.temp.toDouble(),
                           ),
                         )
                         .toList(),
                     barWidth: 4,
                     isCurved: false,
                     dotData: FlDotData(show: false),
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  LineChartBarData(
-                    spots: points
-                        .map(
-                          (point) => FlSpot(
-                            points.indexOf(point).toDouble(),
-                            800,
-                          ),
-                        )
-                        .toList(),
-                    isCurved: false,
-                    dotData: FlDotData(show: false),
-                    color: Colors.green.withOpacity(0.5),
-                  ),
-                  LineChartBarData(
-                    spots: points
-                        .map(
-                          (point) => FlSpot(
-                            points.indexOf(point).toDouble(),
-                            1000,
-                          ),
-                        )
-                        .toList(),
-                    isCurved: false,
-                    dotData: FlDotData(show: false),
-                    color: Colors.orange.withOpacity(0.5),
-                  ),
-                  LineChartBarData(
-                    spots: points
-                        .map(
-                          (point) => FlSpot(
-                            points.indexOf(point).toDouble(),
-                            1200,
-                          ),
-                        )
-                        .toList(),
-                    isCurved: false,
-                    dotData: FlDotData(show: false),
-                    color: Colors.red.withOpacity(0.5),
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                 ],
                 minY: 0,
-                maxY: getMaxCo2Value() + 300,
+                maxY: _getMaxTempValue() + 10,
                 titlesData: FlTitlesData(
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
@@ -170,7 +134,7 @@ class Co2LineChartWidget extends StatelessWidget {
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
                         showTitles: true,
-                        interval: 500,
+                        interval: 5,
                         reservedSize: 50,
                         getTitlesWidget: _leftTitleWidget),
                   ),
@@ -187,13 +151,14 @@ class Co2LineChartWidget extends StatelessWidget {
                   horizontalInterval: 1,
                   verticalInterval: _getInterval(period).toDouble(),
                   checkToShowHorizontalLine: (double value) {
-                    return value == 500 ||
-                        value == 1000 ||
-                        value == 1500 ||
-                        value == 2000 ||
-                        value == 2500 ||
-                        value == 3000 ||
-                        value == 3500;
+                    return value == 5 ||
+                        value == 10 ||
+                        value == 15 ||
+                        value == 20 ||
+                        value == 25 ||
+                        value == 30 ||
+                        value == 35 ||
+                        value == 40;
                   },
                 ),
               ),
