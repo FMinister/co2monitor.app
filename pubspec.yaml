@@ -40,6 +40,7 @@ dependencies:
     provider: ^6.0.5
     http: ^0.13.5
     intl: ^0.18.0
+    flutter_launcher_icons: ^0.12.0
 
 dev_dependencies:
     flutter_test:
@@ -51,6 +52,24 @@ dev_dependencies:
     # package. See that file for information about deactivating specific lint
     # rules and activating additional ones.
     flutter_lints: ^2.0.0
+
+flutter_icons:
+    android: "launcher_icon"
+    ios: true
+    image_path: "./lib/assets/icons/co2_small.png"
+    min_sdk_android: 21 # android min sdk min:16, default 21
+    web:
+        generate: true
+        image_path: "./lib/assets/icons/co2_small.png"
+        background_color: "#hexcode"
+        theme_color: "#hexcode"
+    windows:
+        generate: true
+        image_path: "./lib/assets/icons/co2_small.png"
+        icon_size: 48 # min:48, max:256, default: 48
+    macos:
+        generate: true
+        image_path: "./lib/assets/icons/co2_small.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
