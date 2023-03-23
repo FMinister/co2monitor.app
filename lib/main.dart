@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           create: (_) => ThemeProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => DataProvider([]),
+          create: (_) => DataProvider(),
         ),
       ],
       child: Consumer<ThemeProvider>(

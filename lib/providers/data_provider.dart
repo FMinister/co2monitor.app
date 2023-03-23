@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,8 @@ import "package:http/http.dart" as http;
 
 List<Co2Data> co2DataFromJson(String str) =>
     List<Co2Data>.from(json.decode(str).map((x) => Co2Data.fromJson(x)));
+
+Co2Data latestCo2DataFromJson(String str) => Co2Data.fromJson(json.decode(str));
 
 class Co2Data {
   Co2Data({
@@ -29,26 +32,63 @@ class Co2Data {
 }
 
 class DataProvider with ChangeNotifier {
-  DataProvider(this._data);
-
   List<Co2Data> _data = [];
+  Co2Data _latestData = Co2Data(
+    date: DateTime.now(),
+    temp: 20,
+    co2: 400,
+    location: "Arbeitszimmer",
+  );
 
   List<Co2Data> get data {
-    return [..._data].reversed.toList();
+    return [..._data];
+  }
+
+  Co2Data get latestData {
+    return _latestData;
   }
 
   Future<void> fetchAndSetData() async {
     final url = Uri.http(
       "192.168.178.33:8008",
-      "/api/CO2AndTempDataByDays/1",
+      "/api/CO2AndTempDataByHour/6",
     );
     try {
       final response = await http.get(url);
       _data = co2DataFromJson(response.body);
-      print(response.statusCode);
       notifyListeners();
     } catch (error) {
-      print(error);
+      _data = [];
+      rethrow;
+    }
+  }
+
+  Future<void> fetchLatestData() async {
+    final url = Uri.http(
+      "192.168.178.33:8008",
+      "/api/latestData",
+    );
+    try {
+      final response = await http.get(url);
+      _latestData = latestCo2DataFromJson(response.body);
+      notifyListeners();
+    } catch (error) {
+      _data = [];
+      rethrow;
+    }
+  }
+
+  Future<void> fetchLatestDataEveryMinute() async {
+    final url = Uri.http(
+      "192.168.178.33:8008",
+      "/api/latestData",
+    );
+    try {
+      final response = await http.get(url);
+      _latestData = latestCo2DataFromJson(response.body);
+      _data.add(_latestData);
+      notifyListeners();
+    } catch (error) {
       _data = [];
       rethrow;
     }
