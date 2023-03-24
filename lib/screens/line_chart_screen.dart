@@ -20,7 +20,7 @@ class LineChartScreen extends StatefulWidget {
 class _LineChartScreenState extends State<LineChartScreen> {
   var _isLoading = true;
   bool _themeIsDark = false;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  int _period = 6;
 
   @override
   void initState() {
@@ -185,8 +185,8 @@ class _LineChartScreenState extends State<LineChartScreen> {
                     ),
                   ),
                 ),
-                Co2LineChartWidget(dataProvider.data, 6),
-                TempLineChartWidget(dataProvider.data, 6)
+                Co2LineChartWidget(dataProvider.data),
+                TempLineChartWidget(dataProvider.data),
               ],
             ),
     );

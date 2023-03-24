@@ -7,10 +7,8 @@ import 'package:intl/intl.dart';
 
 class Co2LineChartWidget extends StatelessWidget {
   final List<Co2Data> points;
-  final int period;
 
-  const Co2LineChartWidget(this.points, this.period, {Key? key})
-      : super(key: key);
+  const Co2LineChartWidget(this.points, {Key? key}) : super(key: key);
 
   Widget _bottomTitleWidget(double value, TitleMeta meta) {
     const style = TextStyle(

@@ -5,10 +5,8 @@ import 'package:intl/intl.dart';
 
 class TempLineChartWidget extends StatelessWidget {
   final List<Co2Data> points;
-  final int period;
 
-  const TempLineChartWidget(this.points, this.period, {Key? key})
-      : super(key: key);
+  const TempLineChartWidget(this.points, {Key? key}) : super(key: key);
 
   Widget _bottomTitleWidget(double value, TitleMeta meta) {
     const style = TextStyle(

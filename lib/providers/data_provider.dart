@@ -72,10 +72,11 @@ class DataProvider with ChangeNotifier {
     return _period;
   }
 
-  Future<void> fetchAndSetData() async {
+  Future<void> fetchAndSetData({int period = 6}) async {
+    print(_period);
     final url = Uri.http(
       "192.168.178.33:8008",
-      "/api/CO2AndTempDataByHour/12",
+      "/api/CO2AndTempDataByHour/$_period",
     );
     try {
       final response = await http.get(url);
