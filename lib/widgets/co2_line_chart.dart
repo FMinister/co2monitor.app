@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:co2app/providers/data_provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -158,7 +160,7 @@ class Co2LineChartWidget extends StatelessWidget {
                   ),
                 ],
                 minY: 0,
-                maxY: getMaxCo2Value() + 300,
+                maxY: max(getMaxCo2Value() + 300, 1500),
                 titlesData: FlTitlesData(
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
@@ -178,7 +180,11 @@ class Co2LineChartWidget extends StatelessWidget {
                     sideTitles: SideTitles(showTitles: false),
                   ),
                   rightTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
+                    sideTitles: SideTitles(
+                        showTitles: true,
+                        interval: 500,
+                        reservedSize: 50,
+                        getTitlesWidget: _leftTitleWidget),
                   ),
                 ),
                 gridData: FlGridData(

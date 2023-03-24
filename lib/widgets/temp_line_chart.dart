@@ -142,7 +142,11 @@ class TempLineChartWidget extends StatelessWidget {
                     sideTitles: SideTitles(showTitles: false),
                   ),
                   rightTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
+                    sideTitles: SideTitles(
+                        showTitles: true,
+                        interval: 5,
+                        reservedSize: 50,
+                        getTitlesWidget: _leftTitleWidget),
                   ),
                 ),
                 gridData: FlGridData(
