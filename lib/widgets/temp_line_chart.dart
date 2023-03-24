@@ -29,18 +29,13 @@ class TempLineChartWidget extends StatelessWidget {
     );
   }
 
-  int _getInterval(int period) {
-    switch (period) {
-      case 1:
-        return 5;
-      case 3:
-        return 10;
-      case 6:
-        return 20;
-      case 12:
-        return 40;
-    }
-    return 10;
+  int _getInterval(dynamic context) {
+    double width = MediaQuery.of(context).size.width;
+    if (width < 400) return 150;
+    if (width < 600) return 120;
+    if (width < 900) return 90;
+    if (width < 1200) return 60;
+    return 30;
   }
 
   Widget _leftTitleWidget(double value, TitleMeta meta) {
@@ -127,7 +122,7 @@ class TempLineChartWidget extends StatelessWidget {
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                         showTitles: true,
-                        interval: _getInterval(period).toDouble(),
+                        interval: _getInterval(context).toDouble(),
                         reservedSize: 50,
                         getTitlesWidget: _bottomTitleWidget),
                   ),
@@ -153,7 +148,7 @@ class TempLineChartWidget extends StatelessWidget {
                   show: true,
                   drawVerticalLine: true,
                   horizontalInterval: 1,
-                  verticalInterval: _getInterval(period).toDouble(),
+                  verticalInterval: _getInterval(context).toDouble(),
                   checkToShowHorizontalLine: (double value) {
                     return value == 5 ||
                         value == 10 ||

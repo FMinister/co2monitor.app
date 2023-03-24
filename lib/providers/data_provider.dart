@@ -51,7 +51,7 @@ class DataProvider with ChangeNotifier {
   Future<void> fetchAndSetData() async {
     final url = Uri.http(
       "192.168.178.33:8008",
-      "/api/CO2AndTempDataByHour/6",
+      "/api/CO2AndTempDataByHour/12",
     );
     try {
       final response = await http.get(url);

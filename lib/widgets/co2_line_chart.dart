@@ -31,18 +31,13 @@ class Co2LineChartWidget extends StatelessWidget {
     );
   }
 
-  int _getInterval(int period) {
-    switch (period) {
-      case 1:
-        return 5;
-      case 3:
-        return 10;
-      case 6:
-        return 20;
-      case 12:
-        return 40;
-    }
-    return 10;
+  int _getInterval(dynamic context) {
+    double width = MediaQuery.of(context).size.width;
+    if (width < 400) return 150;
+    if (width < 600) return 120;
+    if (width < 900) return 90;
+    if (width < 1200) return 60;
+    return 30;
   }
 
   Widget _leftTitleWidget(double value, TitleMeta meta) {
@@ -84,7 +79,7 @@ class Co2LineChartWidget extends StatelessWidget {
     );
   }
 
-  double getMaxCo2Value() {
+  double _getMaxCo2Value() {
     var max = points.reduce((c, n) => c.co2 > n.co2 ? c : n).co2.toDouble();
     return max;
   }
@@ -160,12 +155,12 @@ class Co2LineChartWidget extends StatelessWidget {
                   ),
                 ],
                 minY: 0,
-                maxY: max(getMaxCo2Value() + 300, 1500),
+                maxY: max(_getMaxCo2Value() + 300, 1500),
                 titlesData: FlTitlesData(
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                         showTitles: true,
-                        interval: _getInterval(period).toDouble(),
+                        interval: _getInterval(context).toDouble(),
                         reservedSize: 50,
                         getTitlesWidget: _bottomTitleWidget),
                   ),
@@ -191,7 +186,7 @@ class Co2LineChartWidget extends StatelessWidget {
                   show: true,
                   drawVerticalLine: true,
                   horizontalInterval: 1,
-                  verticalInterval: _getInterval(period).toDouble(),
+                  verticalInterval: _getInterval(context).toDouble(),
                   checkToShowHorizontalLine: (double value) {
                     return value == 500 ||
                         value == 1000 ||
