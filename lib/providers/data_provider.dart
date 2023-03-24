@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import "package:http/http.dart" as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 List<Co2Data> co2DataFromJson(String str) =>
     List<Co2Data>.from(json.decode(str).map((x) => Co2Data.fromJson(x)));
@@ -39,6 +40,7 @@ class DataProvider with ChangeNotifier {
     co2: 400,
     location: "Arbeitszimmer",
   );
+  int _period = 6;
 
   List<Co2Data> get data {
     return [..._data];
@@ -46,6 +48,28 @@ class DataProvider with ChangeNotifier {
 
   Co2Data get latestData {
     return _latestData;
+  }
+
+  int get period {
+    return _period;
+  }
+
+  Future<void> setPeriod(int co2Period) async {
+    final prefs = await SharedPreferences.getInstance();
+    _period = co2Period;
+    prefs.setInt("co2Period", co2Period);
+    notifyListeners();
+  }
+
+  Future<int> getPeriod() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey("co2Period")) {
+      prefs.setInt("co2Period", _period);
+    } else {
+      _period = prefs.getInt("co2Period")!;
+    }
+
+    return _period;
   }
 
   Future<void> fetchAndSetData() async {

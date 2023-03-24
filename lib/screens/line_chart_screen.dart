@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:co2app/providers/theme_provider.dart';
+import 'package:co2app/widgets/app_drawer.dart';
 import 'package:co2app/widgets/temp_line_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +20,7 @@ class LineChartScreen extends StatefulWidget {
 class _LineChartScreenState extends State<LineChartScreen> {
   var _isLoading = true;
   bool _themeIsDark = false;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
   void initState() {
@@ -125,6 +127,10 @@ class _LineChartScreenState extends State<LineChartScreen> {
             fontSize: 32,
           ),
         ),
+        iconTheme: IconThemeData(
+          color: Theme.of(context).colorScheme.secondary,
+          size: 30,
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.all(10.0),
@@ -154,8 +160,9 @@ class _LineChartScreenState extends State<LineChartScreen> {
             ),
           )
         ],
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
       ),
+      drawer: const AppDrawer(),
       body: dataProvider.data.isEmpty
           ? _isLoading
               ? Center(
