@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:co2app/providers/message_provider.dart';
 import 'package:co2app/providers/theme_provider.dart';
 import 'package:co2app/widgets/app_drawer.dart';
 import 'package:co2app/widgets/temp_line_chart.dart';
@@ -20,7 +21,6 @@ class LineChartScreen extends StatefulWidget {
 class _LineChartScreenState extends State<LineChartScreen> {
   var _isLoading = true;
   bool _themeIsDark = false;
-  int _period = 6;
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _LineChartScreenState extends State<LineChartScreen> {
     });
   }
 
-  void onTabTheme() {
+  void _onTabTheme() {
     Provider.of<ThemeProvider>(context, listen: false).setTheme(!_themeIsDark);
     setState(() {
       _themeIsDark = !_themeIsDark;
@@ -58,59 +58,25 @@ class _LineChartScreenState extends State<LineChartScreen> {
   }
 
   Future<void> _onTabRefresh(BuildContext context) async {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    Provider.of<MessageProvider>(context, listen: false).hideSnackBar(context);
     try {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          content: Center(
-            child: SizedBox(
-              width: 25,
-              height: 25,
-              child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-          ),
-        ),
-      );
+      Provider.of<MessageProvider>(context, listen: false)
+          .showLoadingSnackBar(context);
       Future.wait([
         Provider.of<DataProvider>(context, listen: false).fetchLatestData(),
         Provider.of<DataProvider>(context, listen: false).fetchAndSetData(),
       ]);
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Theme.of(context).colorScheme.background,
-            content: Text(
-              "Data successfully refreshed.",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-                fontSize: 16,
-              ),
-            ),
-            duration: const Duration(seconds: 2),
-          ),
-        );
+        Provider.of<MessageProvider>(context, listen: false)
+            .showSuccessSnackBar(context, "Data successfully refreshed!");
       }
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          content: Text(
-            "Data couldn't be refreshed.",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.error,
-              fontSize: 16,
-            ),
-          ),
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      Provider.of<MessageProvider>(context, listen: false)
+          .showErrorSnackBar(context, error.toString());
+    } finally {
+      Provider.of<MessageProvider>(context, listen: false)
+          .hideSnackBar(context);
     }
-    if (context.mounted) ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }
 
   @override
@@ -149,7 +115,7 @@ class _LineChartScreenState extends State<LineChartScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: GestureDetector(
-                    onTap: onTabTheme,
+                    onTap: _onTabTheme,
                     child: Icon(
                       _themeIsDark ? Icons.dark_mode : Icons.light_mode,
                       color: Theme.of(context).colorScheme.secondary,

@@ -2,6 +2,8 @@ import 'package:co2app/providers/data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/message_provider.dart';
+
 class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
 
@@ -10,73 +12,28 @@ class AppDrawer extends StatefulWidget {
 }
 
 class _AppDrawerState extends State<AppDrawer> {
-  var periods = [1, 3, 6, 12, 24, 48];
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  final periods = [1, 3, 6, 12, 24, 48];
 
   Future<void> onTabPeriod(BuildContext context, int period) async {
-    Scaffold.of(context).closeDrawer();
-    // ScaffoldMessenger.of(context).hideCurrentSnackBar();
     try {
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     backgroundColor: Theme.of(context).colorScheme.background,
-      //     content: Center(
-      //       child: SizedBox(
-      //         width: 25,
-      //         height: 25,
-      //         child: CircularProgressIndicator(
-      //           color: Theme.of(context).colorScheme.primary,
-      //         ),
-      //       ),
-      //     ),
-      //   ),
-      // );
+      Provider.of<MessageProvider>(context, listen: false)
+          .hideSnackBar(context);
+      Provider.of<MessageProvider>(context, listen: false)
+          .showLoadingSnackBar(context);
       await Provider.of<DataProvider>(context, listen: false).setPeriod(period);
-      // await Future.wait([
-      //   Provider.of<DataProvider>(context, listen: false).setPeriod(period),
-      //   Provider.of<DataProvider>(context, listen: false)
-      //       .fetchAndSetData(period: period),
-      // ]);
-      // if (context.mounted) {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(
-      //       backgroundColor: Theme.of(context).colorScheme.background,
-      //       content: Text(
-      //         "Period successfully saved.",
-      //         textAlign: TextAlign.center,
-      //         style: TextStyle(
-      //           color: Theme.of(context).colorScheme.primary,
-      //           fontSize: 16,
-      //         ),
-      //       ),
-      //       duration: const Duration(seconds: 2),
-      //     ),
-      //   );
-      // }
+      if (context.mounted) {
+        Provider.of<MessageProvider>(context, listen: false)
+            .showSuccessSnackBar(context, "Data successfully refreshed!");
+      }
     } catch (error) {
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     backgroundColor: Theme.of(context).colorScheme.background,
-      //     content: Text(
-      //       "Data couldn't be refreshed.",
-      //       textAlign: TextAlign.center,
-      //       style: TextStyle(
-      //         color: Theme.of(context).colorScheme.error,
-      //         fontSize: 16,
-      //       ),
-      //     ),
-      //     duration: const Duration(seconds: 2),
-      //   ),
-      // );
-      print("error");
+      Provider.of<MessageProvider>(context, listen: false)
+          .showErrorSnackBar(context, error.toString());
+      Scaffold.of(context).closeDrawer();
+    } finally {
+      Provider.of<MessageProvider>(context, listen: false)
+          .hideSnackBar(context);
+      Scaffold.of(context).closeDrawer();
     }
-    // } finally {
-    //   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    // }
   }
 
   @override
@@ -129,82 +86,6 @@ class _AppDrawerState extends State<AppDrawer> {
                   onTap: () async => await onTabPeriod(context, periods[index]),
                 );
               }),
-          // ListTile(
-          //   leading: Icon(
-          //     Icons.update,
-          //     color: Theme.of(context).colorScheme.secondary,
-          //   ),
-          //   title: const Text("1"),
-          //   onTap: () {},
-          // ),
-          // Divider(
-          //   color: Theme.of(context).colorScheme.outline,
-          // ),
-          // ListTile(
-          //   leading: Icon(
-          //     Icons.update,
-          //     color: Theme.of(context).colorScheme.secondary,
-          //   ),
-          //   title: const Text("1"),
-          //   onTap: () {
-          //     Navigator.of(context).pushReplacementNamed("/");
-          //   },
-          // ),
-          // Divider(
-          //   color: Theme.of(context).colorScheme.outline,
-          // ),
-          // ListTile(
-          //   leading: Icon(
-          //     Icons.update,
-          //     color: Theme.of(context).colorScheme.secondary,
-          //   ),
-          //   title: const Text("1"),
-          //   onTap: () {
-          //     Navigator.of(context).pushReplacementNamed("/");
-          //   },
-          // ),
-          // Divider(
-          //   color: Theme.of(context).colorScheme.outline,
-          // ),
-          // ListTile(
-          //   leading: Icon(
-          //     Icons.update,
-          //     color: Theme.of(context).colorScheme.secondary,
-          //   ),
-          //   title: const Text("1"),
-          //   onTap: () {
-          //     Navigator.of(context).pushReplacementNamed("/");
-          //   },
-          // ),
-          // Divider(
-          //   color: Theme.of(context).colorScheme.outline,
-          // ),
-          // ListTile(
-          //   leading: Icon(
-          //     Icons.update,
-          //     color: Theme.of(context).colorScheme.secondary,
-          //   ),
-          //   title: const Text("1"),
-          //   onTap: () {
-          //     Navigator.of(context).pushReplacementNamed("/");
-          //   },
-          // ),
-          // Divider(
-          //   color: Theme.of(context).colorScheme.outline,
-          // ),
-          // ListTile(
-          //   leading: Icon(
-          //     Icons.update,
-          //     color: Theme.of(context).colorScheme.secondary,
-          //   ),
-          //   title: const Text("1"),
-          //   onTap: () {
-          //     Navigator.of(context).pushReplacementNamed("/");
-          //   },
-          // ),
-          // Divider(
-          //   color: Theme.of(context).colorScheme.outline,
-          // ),
         ],
       ),
     );

@@ -74,7 +74,6 @@ class DataProvider with ChangeNotifier {
   }
 
   Future<void> fetchAndSetData({int period = 6}) async {
-    print(_period);
     final url = Uri.http(
       "192.168.178.33:8008",
       "/api/CO2AndTempDataByHour/$_period",
@@ -82,7 +81,6 @@ class DataProvider with ChangeNotifier {
     try {
       final response = await http.get(url);
       _data = co2DataFromJson(response.body);
-      print("new data fetched");
       notifyListeners();
     } catch (error) {
       _data = [];
