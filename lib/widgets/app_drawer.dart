@@ -19,61 +19,64 @@ class _AppDrawerState extends State<AppDrawer> {
 
   Future<void> onTabPeriod(BuildContext context, int period) async {
     Scaffold.of(context).closeDrawer();
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    // ScaffoldMessenger.of(context).hideCurrentSnackBar();
     try {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          content: Center(
-            child: SizedBox(
-              width: 25,
-              height: 25,
-              child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-          ),
-        ),
-      );
-      // await Provider.of<DataProvider>(context, listen: false).setPeriod(period);
-      Future.wait([
-        Provider.of<DataProvider>(context, listen: false).setPeriod(period),
-        Provider.of<DataProvider>(context, listen: false).fetchAndSetData(),
-      ]);
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Theme.of(context).colorScheme.background,
-            content: Text(
-              "Period successfully saved.",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-                fontSize: 16,
-              ),
-            ),
-            duration: const Duration(seconds: 2),
-          ),
-        );
-      }
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     backgroundColor: Theme.of(context).colorScheme.background,
+      //     content: Center(
+      //       child: SizedBox(
+      //         width: 25,
+      //         height: 25,
+      //         child: CircularProgressIndicator(
+      //           color: Theme.of(context).colorScheme.primary,
+      //         ),
+      //       ),
+      //     ),
+      //   ),
+      // );
+      await Provider.of<DataProvider>(context, listen: false).setPeriod(period);
+      // await Future.wait([
+      //   Provider.of<DataProvider>(context, listen: false).setPeriod(period),
+      //   Provider.of<DataProvider>(context, listen: false)
+      //       .fetchAndSetData(period: period),
+      // ]);
+      // if (context.mounted) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(
+      //       backgroundColor: Theme.of(context).colorScheme.background,
+      //       content: Text(
+      //         "Period successfully saved.",
+      //         textAlign: TextAlign.center,
+      //         style: TextStyle(
+      //           color: Theme.of(context).colorScheme.primary,
+      //           fontSize: 16,
+      //         ),
+      //       ),
+      //       duration: const Duration(seconds: 2),
+      //     ),
+      //   );
+      // }
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          content: Text(
-            "Data couldn't be refreshed.",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.error,
-              fontSize: 16,
-            ),
-          ),
-          duration: const Duration(seconds: 2),
-        ),
-      );
-    } finally {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     backgroundColor: Theme.of(context).colorScheme.background,
+      //     content: Text(
+      //       "Data couldn't be refreshed.",
+      //       textAlign: TextAlign.center,
+      //       style: TextStyle(
+      //         color: Theme.of(context).colorScheme.error,
+      //         fontSize: 16,
+      //       ),
+      //     ),
+      //     duration: const Duration(seconds: 2),
+      //   ),
+      // );
+      print("error");
     }
+    // } finally {
+    //   ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    // }
   }
 
   @override

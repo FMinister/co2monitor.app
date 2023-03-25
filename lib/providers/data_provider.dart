@@ -58,7 +58,8 @@ class DataProvider with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     _period = co2Period;
     prefs.setInt("co2Period", co2Period);
-    notifyListeners();
+    await fetchAndSetData(period: co2Period);
+    // notifyListeners();
   }
 
   Future<int> getPeriod() async {
@@ -81,6 +82,7 @@ class DataProvider with ChangeNotifier {
     try {
       final response = await http.get(url);
       _data = co2DataFromJson(response.body);
+      print("new data fetched");
       notifyListeners();
     } catch (error) {
       _data = [];
