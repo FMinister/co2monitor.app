@@ -25,16 +25,19 @@ class _LineChartScreenState extends State<LineChartScreen> {
   @override
   void initState() {
     super.initState();
-    // Do not set _isLoading to false here
-    Provider.of<DataProvider>(context, listen: false)
-        .fetchLatestData()
-        .then((_) => Provider.of<DataProvider>(context, listen: false)
-                .fetchAndSetData()
-                .then((_) {
-              setState(() {
-                _isLoading = false;
-              });
-            }))
+    Provider.of<ThemeProvider>(context, listen: false)
+        .getTheme()
+        .then((_) => _themeIsDark =
+            Provider.of<ThemeProvider>(context, listen: false).isDark)
+        .then((value) => Provider.of<DataProvider>(context, listen: false)
+            .fetchLatestData()
+            .then((_) => Provider.of<DataProvider>(context, listen: false)
+                    .fetchAndSetData()
+                    .then((_) {
+                  setState(() {
+                    _isLoading = false;
+                  });
+                })))
         .catchError((error) {
       Center(
         child: Text("An error occurred, data could not be loaded. \n$error"),
