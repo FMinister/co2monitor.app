@@ -155,6 +155,9 @@ class _LineChartScreenState extends State<LineChartScreen> {
                   ),
                 ),
                 Co2LineChartWidget(dataProvider.data),
+                Divider(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
                 TempLineChartWidget(dataProvider.data),
               ],
             ),

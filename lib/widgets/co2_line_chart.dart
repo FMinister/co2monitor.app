@@ -11,9 +11,6 @@ class Co2LineChartWidget extends StatelessWidget {
   const Co2LineChartWidget(this.points, {Key? key}) : super(key: key);
 
   Widget _bottomTitleWidget(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontSize: 12,
-    );
     var text = DateFormat("HH:mm").format(points[value.toInt()].date);
     if (value.toInt() > points.length - 3) {
       text = "";
@@ -24,7 +21,9 @@ class Co2LineChartWidget extends StatelessWidget {
       space: 10,
       child: Text(
         text,
-        style: style,
+        style: const TextStyle(
+          fontSize: 12,
+        ),
       ),
     );
   }
@@ -159,14 +158,25 @@ class Co2LineChartWidget extends StatelessWidget {
                     sideTitles: SideTitles(
                         showTitles: true,
                         interval: _getInterval(context).toDouble(),
-                        reservedSize: 50,
+                        reservedSize: 30,
                         getTitlesWidget: _bottomTitleWidget),
                   ),
                   leftTitles: AxisTitles(
+                    axisNameSize: 30,
+                    axisNameWidget: const Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "CO2",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                     sideTitles: SideTitles(
                         showTitles: true,
                         interval: 500,
-                        reservedSize: 50,
+                        reservedSize: 40,
                         getTitlesWidget: _leftTitleWidget),
                   ),
                   topTitles: AxisTitles(

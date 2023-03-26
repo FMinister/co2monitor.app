@@ -125,6 +125,17 @@ class TempLineChartWidget extends StatelessWidget {
                         getTitlesWidget: _bottomTitleWidget),
                   ),
                   leftTitles: AxisTitles(
+                    axisNameSize: 30,
+                    axisNameWidget: const Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Temperature",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                     sideTitles: SideTitles(
                         showTitles: true,
                         interval: 5,
