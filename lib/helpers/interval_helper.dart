@@ -13,7 +13,6 @@ class IntervallHelper {
     if (width < 1200) interval = 60;
     if (period == 24) interval = (interval * 4).round();
     if (period == 48) interval = (interval * 8).round();
-    print(interval);
     return interval;
   }
 }
