@@ -13,25 +13,34 @@ class AppDrawer extends StatefulWidget {
 
 class _AppDrawerState extends State<AppDrawer> {
   final periods = [1, 3, 6, 12, 24, 48];
+  var _isLoading = false;
 
   Future<void> onTabPeriod(BuildContext context, int period) async {
+    final messageProvider =
+        Provider.of<MessageProvider>(context, listen: false);
+
     try {
-      Provider.of<MessageProvider>(context, listen: false)
-          .hideSnackBar(context);
-      Provider.of<MessageProvider>(context, listen: false)
-          .showLoadingSnackBar(context);
+      setState(() {
+        _isLoading = true;
+      });
+      messageProvider.hideSnackBar(context);
+      messageProvider.showLoadingSnackBar(context);
       await Provider.of<DataProvider>(context, listen: false).setPeriod(period);
       if (context.mounted) {
-        Provider.of<MessageProvider>(context, listen: false)
-            .showSuccessSnackBar(context, "Data successfully refreshed!");
+        messageProvider.showSuccessSnackBar(
+            context, "Data successfully refreshed!");
       }
     } catch (error) {
-      Provider.of<MessageProvider>(context, listen: false)
-          .showErrorSnackBar(context, error.toString());
+      setState(() {
+        _isLoading = false;
+      });
+      messageProvider.showErrorSnackBar(context, error.toString());
       Scaffold.of(context).closeDrawer();
     } finally {
-      Provider.of<MessageProvider>(context, listen: false)
-          .hideSnackBar(context);
+      setState(() {
+        _isLoading = false;
+      });
+      messageProvider.hideSnackBar(context);
       Scaffold.of(context).closeDrawer();
     }
   }
@@ -86,6 +95,13 @@ class _AppDrawerState extends State<AppDrawer> {
                   onTap: () async => await onTabPeriod(context, periods[index]),
                 );
               }),
+          if (_isLoading)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
         ],
       ),
     );
