@@ -42,6 +42,10 @@ class DataProvider with ChangeNotifier {
   );
   int _period = 6;
 
+  DataProvider() {
+    getPeriod();
+  }
+
   List<Co2Data> get data {
     return [..._data];
   }

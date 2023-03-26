@@ -21,29 +21,44 @@ class LineChartScreen extends StatefulWidget {
 class _LineChartScreenState extends State<LineChartScreen> {
   var _isLoading = true;
   bool _themeIsDark = false;
+  int _period = 6;
 
   @override
   void initState() {
     super.initState();
-    Provider.of<ThemeProvider>(context, listen: false)
-        .getTheme()
-        .then((_) => _themeIsDark =
-            Provider.of<ThemeProvider>(context, listen: false).isDark)
-        .then((value) => Provider.of<DataProvider>(context, listen: false)
-            .fetchLatestData()
-            .then((_) => Provider.of<DataProvider>(context, listen: false)
-                    .fetchAndSetData()
-                    .then((_) {
-                  setState(() {
-                    _isLoading = false;
-                  });
-                })))
-        .catchError((error) {
-      Center(
-        child: Text("An error occurred, data could not be loaded. \n$error"),
-      );
-    });
-    fetchLatestDataEveryMinute();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final dataProvider = Provider.of<DataProvider>(context, listen: false);
+
+    try {
+      await Future.wait([
+        themeProvider.getTheme(),
+        dataProvider.getPeriod(),
+      ]);
+
+      await Future.wait([
+        dataProvider.fetchLatestData(),
+        dataProvider.fetchAndSetData(period: _period),
+      ]);
+
+      _themeIsDark = themeProvider.isDark;
+      _period = dataProvider.period;
+      fetchLatestDataEveryMinute();
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (error) {
+      handleLoadDataError(error);
+    }
+  }
+
+  void handleLoadDataError(error) {
+    Center(
+      child: Text("An error occurred, data could not be loaded. \n$error"),
+    );
   }
 
   Future<void> fetchLatestDataEveryMinute() async {
@@ -146,7 +161,7 @@ class _LineChartScreenState extends State<LineChartScreen> {
               children: <Widget>[
                 Center(
                   child: Text(
-                    "${DateFormat("yyyy.MM.dd - HH:mm").format(dataProvider.latestData.date)}, CO2: ${dataProvider.latestData.co2}, Temp: ${dataProvider.latestData.temp}",
+                    "${DateFormat("yyyy.MM.dd - HH:mm").format(dataProvider.latestData.date)}, CO2: ${dataProvider.latestData.co2}, Temp: ${dataProvider.latestData.temp}, Period: ${dataProvider.period}h",
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onBackground,
                       fontWeight: FontWeight.bold,
