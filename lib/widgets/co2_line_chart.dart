@@ -5,10 +5,13 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../helpers/interval_helper.dart';
+
 class Co2LineChartWidget extends StatelessWidget {
   final List<Co2Data> points;
+  final IntervallHelper intervalHelper = IntervallHelper();
 
-  const Co2LineChartWidget(this.points, {Key? key}) : super(key: key);
+  Co2LineChartWidget(this.points, {Key? key}) : super(key: key);
 
   Widget _bottomTitleWidget(double value, TitleMeta meta) {
     var text = DateFormat("HH:mm").format(points[value.toInt()].date);
@@ -29,12 +32,7 @@ class Co2LineChartWidget extends StatelessWidget {
   }
 
   int _getInterval(dynamic context) {
-    double width = MediaQuery.of(context).size.width;
-    if (width < 400) return 150;
-    if (width < 600) return 120;
-    if (width < 900) return 90;
-    if (width < 1200) return 60;
-    return 30;
+    return intervalHelper.calculateInterval(context);
   }
 
   Widget _leftTitleWidget(double value, TitleMeta meta) {
