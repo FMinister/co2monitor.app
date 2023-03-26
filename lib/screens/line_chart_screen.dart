@@ -76,24 +76,25 @@ class _LineChartScreenState extends State<LineChartScreen> {
   }
 
   Future<void> _onTabRefresh(BuildContext context) async {
-    Provider.of<MessageProvider>(context, listen: false).hideSnackBar(context);
+    final messageProvider =
+        Provider.of<MessageProvider>(context, listen: false);
+    final dataProvider = Provider.of<DataProvider>(context, listen: false);
+
+    messageProvider.hideSnackBar(context);
     try {
-      Provider.of<MessageProvider>(context, listen: false)
-          .showLoadingSnackBar(context);
+      messageProvider.showLoadingSnackBar(context);
       Future.wait([
-        Provider.of<DataProvider>(context, listen: false).fetchLatestData(),
-        Provider.of<DataProvider>(context, listen: false).fetchAndSetData(),
+        dataProvider.fetchLatestData(),
+        dataProvider.fetchAndSetData(),
       ]);
       if (context.mounted) {
-        Provider.of<MessageProvider>(context, listen: false)
-            .showSuccessSnackBar(context, "Data successfully refreshed!");
+        messageProvider.showSuccessSnackBar(
+            context, "Data successfully refreshed!");
       }
     } catch (error) {
-      Provider.of<MessageProvider>(context, listen: false)
-          .showErrorSnackBar(context, error.toString());
+      messageProvider.showErrorSnackBar(context, error.toString());
     } finally {
-      Provider.of<MessageProvider>(context, listen: false)
-          .hideSnackBar(context);
+      messageProvider.hideSnackBar(context);
     }
   }
 
