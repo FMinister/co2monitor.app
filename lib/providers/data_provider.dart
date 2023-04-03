@@ -39,6 +39,30 @@ class Co2Data {
 }
 
 @riverpod
+Future<Co2Data> fetchLatestData(FetchLatestDataRef ref) async {
+  final url = Uri.http(
+    apiUrl,
+    "/api/latestData",
+  );
+  final response = await http.get(url);
+  final latestData = latestCo2DataFromJson(response.body);
+
+  return latestData;
+}
+
+@riverpod
+Future<List<Co2Data>> fetchData(FetchDataRef ref) async {
+  final url = Uri.http(
+    apiUrl,
+    "/api/CO2AndTempDataByHour/6",
+  );
+  final response = await http.get(url);
+  final data = co2DataFromJson(response.body);
+
+  return data;
+}
+
+@riverpod
 class Data extends _$Data {
   @override
   Future<List<Co2Data>> build() async {

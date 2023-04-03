@@ -6,6 +6,35 @@ part of 'data_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$fetchLatestDataHash() => r'0727a374cf1c9f518e6a7a2ade23af30b611660a';
+
+/// See also [fetchLatestData].
+@ProviderFor(fetchLatestData)
+final fetchLatestDataProvider = AutoDisposeFutureProvider<Co2Data>.internal(
+  fetchLatestData,
+  name: r'fetchLatestDataProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$fetchLatestDataHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FetchLatestDataRef = AutoDisposeFutureProviderRef<Co2Data>;
+String _$fetchDataHash() => r'fcf08b7e97a190dd254408e5d0ecb08e28c2fd5e';
+
+/// See also [fetchData].
+@ProviderFor(fetchData)
+final fetchDataProvider = AutoDisposeFutureProvider<List<Co2Data>>.internal(
+  fetchData,
+  name: r'fetchDataProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$fetchDataHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FetchDataRef = AutoDisposeFutureProviderRef<List<Co2Data>>;
 String _$dataHash() => r'e9d55ae3980aa3ce2e9a45f87d8d0ac1c14e34ec';
 
 /// See also [Data].

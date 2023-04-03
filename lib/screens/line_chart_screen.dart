@@ -24,14 +24,15 @@ class _LineChartScreenState extends ConsumerState<LineChartScreen> {
     super.initState();
     // "ref" can be used in all life-cycles of a StatefulWidget.
     ref.read(dataProvider);
+    fetchLatestDataEveryMinute();
   }
 
-  // Future<void> fetchLatestDataEveryMinute() async {
-  //   Timer.periodic(const Duration(seconds: 60), (_) async {
-  //     await Provider.of<DataProvider>(context, listen: false)
-  //         .fetchLatestDataEveryMinute();
-  //   });
-  // }
+  Future<void> fetchLatestDataEveryMinute() async {
+    Timer.periodic(const Duration(seconds: 60), (_) async {
+      final test = await ref.read(dataProvider.future);
+      print(test.length);
+    });
+  }
 
   // Future<void> _onTabRefresh(BuildContext context) async {
   //   final messageProvider =
@@ -58,8 +59,8 @@ class _LineChartScreenState extends ConsumerState<LineChartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final dataProv = ref.watch(dataProvider);
-    final latestDataProv = ref.watch(latestDataProvider);
+    final dataProv = ref.watch(fetchDataProvider);
+    final latestDataProv = ref.watch(fetchLatestDataProvider);
     final dateFormatter = ref.watch(dateFormatterProvider);
 
     return dataProv.when(
