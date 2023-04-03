@@ -29,8 +29,8 @@ class _LineChartScreenState extends ConsumerState<LineChartScreen> {
 
   Future<void> fetchLatestDataEveryMinute() async {
     Timer.periodic(const Duration(seconds: 60), (_) async {
-      final test = await ref.read(dataProvider.future);
-      print(test.length);
+      ref.watch(dataProvider.notifier).updateData();
+      ref.watch(latestDataProvider.notifier).updateLatestData();
     });
   }
 
@@ -59,8 +59,8 @@ class _LineChartScreenState extends ConsumerState<LineChartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final dataProv = ref.watch(fetchDataProvider);
-    final latestDataProv = ref.watch(fetchLatestDataProvider);
+    final dataProv = ref.watch(dataProvider);
+    final latestDataProv = ref.watch(latestDataProvider);
     final dateFormatter = ref.watch(dateFormatterProvider);
 
     return dataProv.when(
