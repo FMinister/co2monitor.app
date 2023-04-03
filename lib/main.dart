@@ -1,4 +1,5 @@
 import 'package:co2app/providers/theme_provider.dart';
+import 'package:co2app/screens/line_chart_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -64,9 +65,7 @@ class MyApp extends ConsumerWidget {
             ),
           ],
         ),
-        body: Center(
-          child: Text("test"),
-        ),
+        body: const LineChartScreen(),
       ),
     );
   }

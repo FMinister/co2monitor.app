@@ -1,182 +1,105 @@
 import 'dart:async';
 
+import 'package:co2app/providers/date_format_provider.dart';
 import 'package:co2app/providers/message_provider.dart';
-import 'package:co2app/providers/theme_provider.dart';
-import 'package:co2app/widgets/app_drawer.dart';
+// import 'package:co2app/widgets/app_drawer.dart';
 import 'package:co2app/widgets/temp_line_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 import '../providers/data_provider.dart';
 import '../widgets/co2_line_chart.dart';
 
-class LineChartScreen extends StatefulWidget {
+class LineChartScreen extends ConsumerStatefulWidget {
   const LineChartScreen({super.key});
 
   @override
-  State<LineChartScreen> createState() => _LineChartScreenState();
+  _LineChartScreenState createState() => _LineChartScreenState();
 }
 
-class _LineChartScreenState extends State<LineChartScreen> {
-  var _isLoading = true;
-  bool _themeIsDark = false;
-  int _period = 6;
-
+class _LineChartScreenState extends ConsumerState<LineChartScreen> {
   @override
   void initState() {
     super.initState();
-    loadData();
+    // "ref" can be used in all life-cycles of a StatefulWidget.
+    ref.read(dataProvider);
   }
 
-  Future<void> loadData() async {
-    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-    final dataProvider = Provider.of<DataProvider>(context, listen: false);
+  // Future<void> fetchLatestDataEveryMinute() async {
+  //   Timer.periodic(const Duration(seconds: 60), (_) async {
+  //     await Provider.of<DataProvider>(context, listen: false)
+  //         .fetchLatestDataEveryMinute();
+  //   });
+  // }
 
-    try {
-      await Future.wait([
-        themeProvider.getTheme(),
-        dataProvider.getPeriod(),
-      ]);
+  // Future<void> _onTabRefresh(BuildContext context) async {
+  //   final messageProvider =
+  //       Provider.of<MessageProvider>(context, listen: false);
+  //   final dataProvider = Provider.of<DataProvider>(context, listen: false);
 
-      await Future.wait([
-        dataProvider.fetchLatestData(),
-        dataProvider.fetchAndSetData(period: _period),
-      ]);
-
-      _themeIsDark = themeProvider.isDark;
-      _period = dataProvider.period;
-      fetchLatestDataEveryMinute();
-      setState(() {
-        _isLoading = false;
-      });
-    } catch (error) {
-      handleLoadDataError(error);
-    }
-  }
-
-  void handleLoadDataError(error) {
-    Center(
-      child: Text("An error occurred, data could not be loaded. \n$error"),
-    );
-  }
-
-  Future<void> fetchLatestDataEveryMinute() async {
-    Timer.periodic(const Duration(seconds: 60), (_) async {
-      await Provider.of<DataProvider>(context, listen: false)
-          .fetchLatestDataEveryMinute();
-    });
-  }
-
-  void _onTabTheme() {
-    Provider.of<ThemeProvider>(context, listen: false).setTheme(!_themeIsDark);
-    setState(() {
-      _themeIsDark = !_themeIsDark;
-    });
-  }
-
-  Future<void> _onTabRefresh(BuildContext context) async {
-    final messageProvider =
-        Provider.of<MessageProvider>(context, listen: false);
-    final dataProvider = Provider.of<DataProvider>(context, listen: false);
-
-    messageProvider.hideSnackBar(context);
-    try {
-      messageProvider.showLoadingSnackBar(context);
-      Future.wait([
-        dataProvider.fetchLatestData(),
-        dataProvider.fetchAndSetData(),
-      ]);
-      if (context.mounted) {
-        messageProvider.showSuccessSnackBar(
-            context, "Data successfully refreshed!");
-      }
-    } catch (error) {
-      messageProvider.showErrorSnackBar(context, error.toString());
-    } finally {
-      messageProvider.hideSnackBar(context);
-    }
-  }
+  //   messageProvider.hideSnackBar(context);
+  //   try {
+  //     messageProvider.showLoadingSnackBar(context);
+  //     Future.wait([
+  //       dataProvider.fetchLatestData(),
+  //       dataProvider.fetchAndSetData(),
+  //     ]);
+  //     if (context.mounted) {
+  //       messageProvider.showSuccessSnackBar(
+  //           context, "Data successfully refreshed!");
+  //     }
+  //   } catch (error) {
+  //     messageProvider.showErrorSnackBar(context, error.toString());
+  //   } finally {
+  //     messageProvider.hideSnackBar(context);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final dataProvider = Provider.of<DataProvider>(context);
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          "CO2Monitor",
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.primary,
-            fontWeight: FontWeight.bold,
-            fontSize: 32,
+    final dataProv = ref.watch(dataProvider);
+    final latestDataProv = ref.watch(latestDataProvider);
+    final dateFormatter = ref.watch(dateFormatterProvider);
+
+    return dataProv.when(
+      data: (data) => ListView(
+        children: <Widget>[
+          latestDataProv.when(
+            data: (latestData) => Center(
+              child: Text(
+                "${dateFormatter.format(latestData.date)}, CO2: ${latestData.co2}, Temp: ${latestData.temp}, Period: 6h",
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            error: (err, _) => Center(
+              child: Text("Data could not be loaded: \n$err"),
+            ),
+            loading: () => Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
           ),
-        ),
-        iconTheme: IconThemeData(
-          color: Theme.of(context).colorScheme.secondary,
-          size: 30,
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: GestureDetector(
-                    onTap: () async => await _onTabRefresh(context),
-                    child: Icon(
-                      Icons.refresh,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: GestureDetector(
-                    onTap: _onTabTheme,
-                    child: Icon(
-                      _themeIsDark ? Icons.dark_mode : Icons.light_mode,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
+          Co2LineChartWidget(data),
+          Divider(
+            color: Theme.of(context).colorScheme.outline,
+          ),
+          TempLineChartWidget(data),
         ],
-        automaticallyImplyLeading: true,
       ),
-      drawer: const AppDrawer(),
-      body: dataProvider.data.isEmpty
-          ? _isLoading
-              ? Center(
-                  child: CircularProgressIndicator(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                )
-              : const Center(
-                  child: Text('No data found.'),
-                )
-          : ListView(
-              children: <Widget>[
-                Center(
-                  child: Text(
-                    "${DateFormat("yyyy.MM.dd - HH:mm").format(dataProvider.latestData.date)}, CO2: ${dataProvider.latestData.co2}, Temp: ${dataProvider.latestData.temp}, Period: ${dataProvider.period}h",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                Co2LineChartWidget(dataProvider.data),
-                Divider(
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-                TempLineChartWidget(dataProvider.data),
-              ],
-            ),
+      error: (err, _) => Center(
+        child: Text("Data could not be loaded: \n$err"),
+      ),
+      loading: () => Center(
+        child: CircularProgressIndicator(
+          color: Theme.of(context).colorScheme.primary,
+        ),
+      ),
     );
   }
 }
