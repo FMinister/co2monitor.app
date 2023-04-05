@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:co2app/providers/period_provider.dart';
 import "package:http/http.dart" as http;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -43,7 +44,9 @@ class Data extends _$Data {
     return await getData();
   }
 
-  Future<List<Co2Data>> getData({int period = 6}) async {
+  Future<List<Co2Data>> getData() async {
+    final period = await ref
+        .watch(periodNotifierProvider.selectAsync((data) => data.period));
     state = const AsyncValue.loading();
     final url = Uri.http(
       apiUrl,

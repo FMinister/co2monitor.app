@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:co2app/providers/date_format_provider.dart';
 import 'package:co2app/providers/message_provider.dart';
+import 'package:co2app/providers/period_provider.dart';
 // import 'package:co2app/widgets/app_drawer.dart';
 import 'package:co2app/widgets/temp_line_chart.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,8 @@ class LineChartScreenState extends ConsumerState<LineChartScreen> {
   @override
   void initState() {
     super.initState();
-    ref.read(dataProvider);
+    // ref.read(dataProvider);
+    ref.read(periodNotifierProvider);
     fetchLatestDataEveryMinute();
   }
 
@@ -71,6 +73,7 @@ class LineChartScreenState extends ConsumerState<LineChartScreen> {
     final dataProv = ref.watch(dataProvider);
     final latestDataProv = ref.watch(latestDataProvider);
     final dateFormatter = ref.watch(dateFormatterProvider);
+    final periodProv = ref.watch(periodNotifierProvider);
 
     return dataProv.when(
       data: (data) => ListView(
@@ -78,7 +81,7 @@ class LineChartScreenState extends ConsumerState<LineChartScreen> {
           latestDataProv.when(
             data: (latestData) => Center(
               child: Text(
-                "${dateFormatter.format(latestData.date)}, CO2: ${latestData.co2}, Temp: ${latestData.temp}, Period: 6h",
+                "${dateFormatter.format(latestData.date)}, CO2: ${latestData.co2}, Temp: ${latestData.temp}, Period: ${periodProv.value!.period}h",
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onBackground,
                   fontWeight: FontWeight.bold,
