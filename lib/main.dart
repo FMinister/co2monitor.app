@@ -1,6 +1,5 @@
 import 'package:co2app/providers/data_provider.dart';
 import 'package:co2app/providers/message_provider.dart';
-import 'package:co2app/providers/period_provider.dart';
 import 'package:co2app/providers/theme_provider.dart';
 import 'package:co2app/screens/line_chart_screen.dart';
 import 'package:co2app/widgets/app_drawer.dart';
@@ -36,19 +35,19 @@ class MyAppState extends ConsumerState<MyApp> {
   }
 
   Future<void> _onTabRefresh(BuildContext context) async {
-    ref
-        .read(messageStateNotifierProvider.notifier)
-        .showSuccessSnackBar(context, "test");
-    // final messageProv =
-    //     ref.read(messageStateNotifierProvider(context).notifier);
-    // messageProv.showLoadingSnackBar(context);
-    // ref.read(dataProvider.notifier).getData().then((value) {
-    //   messageProv.hideSnackBar(context);
-    //   messageProv.showSuccessSnackBar(context, "Data successfully refreshed");
-    // }).catchError((err) {
-    //   messageProv.hideSnackBar(context);
-    //   messageProv.showErrorSnackBar(context, "Data could not be loaded.\n$err");
-    // });
+    final messageProv = ref.read(messageStateNotifierProvider.notifier);
+    messageProv.showLoadingSnackBar(context);
+
+    try {
+      await ref.read(dataProvider.notifier).getData();
+      if (context.mounted) {
+        messageProv.showSuccessSnackBar(context, "Data successfully refreshed");
+      }
+    } catch (err) {
+      messageProv.showErrorSnackBar(context, "Data could not be loaded.\n$err");
+    } finally {
+      messageProv.hideSnackBar(context);
+    }
   }
 
   @override

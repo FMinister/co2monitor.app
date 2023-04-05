@@ -1,15 +1,13 @@
 import 'dart:async';
 
 import 'package:co2app/providers/date_format_provider.dart';
-import 'package:co2app/providers/message_provider.dart';
 import 'package:co2app/providers/period_provider.dart';
-// import 'package:co2app/widgets/app_drawer.dart';
 import 'package:co2app/widgets/temp_line_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 import '../providers/data_provider.dart';
+import '../providers/message_provider.dart';
 import '../widgets/co2_line_chart.dart';
 
 class LineChartScreen extends ConsumerStatefulWidget {
@@ -27,15 +25,15 @@ class LineChartScreenState extends ConsumerState<LineChartScreen> {
     super.initState();
     // ref.read(dataProvider);
     ref.read(periodNotifierProvider);
-    fetchLatestDataEveryMinute();
+    // fetchLatestDataEveryMinute();
   }
 
-  Future<void> fetchLatestDataEveryMinute() async {
+  Future<void> fetchLatestDataEveryMinute(BuildContext context) async {
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 60), (_) async {
       final latestData =
           await ref.watch(latestDataProvider.notifier).updateLatestData();
-      ref.watch(dataProvider.notifier).updateData(latestData);
+      await ref.watch(dataProvider.notifier).updateData(latestData);
     });
   }
 
@@ -51,6 +49,8 @@ class LineChartScreenState extends ConsumerState<LineChartScreen> {
     final latestDataProv = ref.watch(latestDataProvider);
     final dateFormatter = ref.watch(dateFormatterProvider);
     final periodProv = ref.watch(periodNotifierProvider);
+
+    fetchLatestDataEveryMinute(context);
 
     return dataProv.when(
       data: (data) => ListView(

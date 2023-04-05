@@ -3,13 +3,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part "message_provider.g.dart";
 
-class SnackBarService {
-  static final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
-  static void showSnackBar({required String content}) {
-    scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text(content)));
-  }
-}
-
 @riverpod
 class MessageStateNotifier extends _$MessageStateNotifier {
   static final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
