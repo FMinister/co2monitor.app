@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/data_provider.dart';
-import '../providers/message_provider.dart';
 import '../widgets/co2_line_chart.dart';
 
 class LineChartScreen extends ConsumerStatefulWidget {
@@ -23,9 +22,7 @@ class LineChartScreenState extends ConsumerState<LineChartScreen> {
   @override
   void initState() {
     super.initState();
-    // ref.read(dataProvider);
     ref.read(periodNotifierProvider);
-    // fetchLatestDataEveryMinute();
   }
 
   Future<void> fetchLatestDataEveryMinute(BuildContext context) async {

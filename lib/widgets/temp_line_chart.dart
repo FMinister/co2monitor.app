@@ -1,11 +1,13 @@
 import 'package:co2app/providers/data_provider.dart';
+import 'package:co2app/providers/period_provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../helpers/interval_helper.dart';
 
-class TempLineChartWidget extends StatelessWidget {
+class TempLineChartWidget extends ConsumerWidget {
   final List<Co2Data> points;
   final IntervallHelper intervalHelper = IntervallHelper();
 
@@ -30,8 +32,8 @@ class TempLineChartWidget extends StatelessWidget {
     );
   }
 
-  int _getInterval(dynamic context) {
-    return intervalHelper.calculateInterval(context);
+  int _getInterval(dynamic context, int period) {
+    return intervalHelper.calculateInterval(context, period);
   }
 
   Widget _leftTitleWidget(double value, TitleMeta meta) {
@@ -82,7 +84,9 @@ class TempLineChartWidget extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final periodProv = ref.watch(periodNotifierProvider);
+
     return OrientationBuilder(
       builder: (context, orientation) {
         return AspectRatio(
@@ -118,7 +122,9 @@ class TempLineChartWidget extends StatelessWidget {
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                         showTitles: true,
-                        interval: _getInterval(context).toDouble(),
+                        interval:
+                            _getInterval(context, periodProv.value!.period)
+                                .toDouble(),
                         reservedSize: 50,
                         getTitlesWidget: _bottomTitleWidget),
                   ),
@@ -155,7 +161,9 @@ class TempLineChartWidget extends StatelessWidget {
                   show: true,
                   drawVerticalLine: true,
                   horizontalInterval: 1,
-                  verticalInterval: _getInterval(context).toDouble(),
+                  verticalInterval:
+                      _getInterval(context, periodProv.value!.period)
+                          .toDouble(),
                   checkToShowHorizontalLine: (double value) {
                     return value == 5 ||
                         value == 10 ||
