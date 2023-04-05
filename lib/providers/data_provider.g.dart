@@ -3,25 +3,6 @@
 part of 'data_provider.dart';
 
 // **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
-
-_$_Co2Data _$$_Co2DataFromJson(Map<String, dynamic> json) => _$_Co2Data(
-      date: DateTime.parse(json['date'] as String),
-      temp: (json['temp'] as num).toDouble(),
-      co2: json['co2'] as int,
-      location: json['location'] as String,
-    );
-
-Map<String, dynamic> _$$_Co2DataToJson(_$_Co2Data instance) =>
-    <String, dynamic>{
-      'date': instance.date.toIso8601String(),
-      'temp': instance.temp,
-      'co2': instance.co2,
-      'location': instance.location,
-    };
-
-// **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 

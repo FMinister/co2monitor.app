@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:freezed_annotation/freezed_annotation.dart';
 import "package:http/http.dart" as http;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part "data_provider.g.dart";
-part "data_provider.freezed.dart";
 
 const String apiUrl = "192.168.178.33:8008";
 
@@ -15,17 +13,27 @@ List<Co2Data> co2DataFromJson(String str) =>
 
 Co2Data latestCo2DataFromJson(String str) => Co2Data.fromJson(json.decode(str));
 
-@freezed
 class Co2Data {
-  factory Co2Data({
-    required DateTime date,
-    required double temp,
-    required int co2,
-    required String location,
-  }) = _Co2Data;
+  Co2Data({
+    required this.date,
+    required this.temp,
+    required this.co2,
+    required this.location,
+  });
 
-  factory Co2Data.fromJson(Map<String, dynamic> json) =>
-      _$Co2DataFromJson(json);
+  final DateTime date;
+  final double temp;
+  final int co2;
+  final String location;
+
+  factory Co2Data.fromRawJson(String str) => Co2Data.fromJson(json.decode(str));
+
+  factory Co2Data.fromJson(Map<String, dynamic> json) => Co2Data(
+        date: DateTime.parse(json["Date"]),
+        temp: json["Temp"]?.toDouble(),
+        co2: json["CO2"],
+        location: json["Location"],
+      );
 }
 
 @riverpod
