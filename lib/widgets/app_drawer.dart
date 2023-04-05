@@ -47,30 +47,32 @@ class AppDrawerState extends ConsumerState<AppDrawer> {
           Divider(
             color: Theme.of(context).colorScheme.outline,
           ),
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: periods.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                leading: Icon(
-                  Icons.update,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                title: Text(
-                  "${periods[index]} ${periods[index] > 1 ? "hours" : "hour"}",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16),
-                ),
-                onTap: () async {
-                  await onTabPeriod(periods[index], context);
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                  }
-                },
-              );
-            },
+          Expanded(
+            child: ListView.builder(
+              // shrinkWrap: false,
+              itemCount: periods.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: Icon(
+                    Icons.update,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  title: Text(
+                    "${periods[index]} ${periods[index] > 1 ? "hours" : "hour"}",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                  onTap: () async {
+                    await onTabPeriod(periods[index], context);
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
