@@ -6,7 +6,7 @@ part of 'data_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dataHash() => r'24bdb5d48dc9d2591f2ce2e3889ed747e9be0cc1';
+String _$dataHash() => r'e2531c0041c659050660617f6b68bf92c70d6fb1';
 
 /// See also [Data].
 @ProviderFor(Data)
@@ -21,7 +21,7 @@ final dataProvider =
 );
 
 typedef _$Data = AutoDisposeAsyncNotifier<List<Co2Data>>;
-String _$latestDataHash() => r'21eb2905a426025647412ac11da4ce2e40375e63';
+String _$latestDataHash() => r'995924f2856d36191712709e23e602571a49919c';
 
 /// See also [LatestData].
 @ProviderFor(LatestData)

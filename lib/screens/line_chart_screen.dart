@@ -15,23 +15,32 @@ class LineChartScreen extends ConsumerStatefulWidget {
   const LineChartScreen({super.key});
 
   @override
-  _LineChartScreenState createState() => _LineChartScreenState();
+  LineChartScreenState createState() => LineChartScreenState();
 }
 
-class _LineChartScreenState extends ConsumerState<LineChartScreen> {
+class LineChartScreenState extends ConsumerState<LineChartScreen> {
+  Timer? _timer;
+
   @override
   void initState() {
     super.initState();
-    // "ref" can be used in all life-cycles of a StatefulWidget.
     ref.read(dataProvider);
     fetchLatestDataEveryMinute();
   }
 
   Future<void> fetchLatestDataEveryMinute() async {
-    Timer.periodic(const Duration(seconds: 60), (_) async {
-      ref.watch(dataProvider.notifier).updateData();
-      ref.watch(latestDataProvider.notifier).updateLatestData();
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 60), (_) async {
+      final latestData =
+          await ref.watch(latestDataProvider.notifier).updateLatestData();
+      ref.watch(dataProvider.notifier).updateData(latestData);
     });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   // Future<void> _onTabRefresh(BuildContext context) async {

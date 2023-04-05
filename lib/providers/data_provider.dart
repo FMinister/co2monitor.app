@@ -59,15 +59,8 @@ class Data extends _$Data {
     return data;
   }
 
-  Future<void> updateData() async {
+  Future<void> updateData(Co2Data latestData) async {
     state = const AsyncValue.loading();
-    final url = Uri.http(
-      apiUrl,
-      "/api/latestData",
-    );
-    final response = await http.get(url);
-    final latestData = latestCo2DataFromJson(response.body);
-
     state = AsyncValue.data([...state.value!, latestData]);
   }
 }
@@ -93,7 +86,7 @@ class LatestData extends _$LatestData {
     return latestData;
   }
 
-  Future<void> updateLatestData() async {
+  Future<Co2Data> updateLatestData() async {
     state = const AsyncValue.loading();
     final url = Uri.http(
       apiUrl,
@@ -103,6 +96,8 @@ class LatestData extends _$LatestData {
     final latestData = latestCo2DataFromJson(response.body);
 
     state = AsyncValue.data(latestData);
+
+    return latestData;
   }
 }
 
