@@ -1,18 +1,37 @@
-import 'package:co2app/providers/data_provider.dart';
 import 'package:flutter/material.dart';
 
 class IntervallHelper {
-  int calculateInterval(BuildContext context) {
-    int interval = 30;
-    // int period = Provider.of<DataProvider>(context, listen: false).period;
-    int period = 6;
+  int calculateInterval(BuildContext context, int period) {
+    int interval = 10;
     double width = MediaQuery.of(context).size.width;
-    if (width < 400) interval = 150;
-    if (width < 600) interval = 120;
-    if (width < 900) interval = 90;
-    if (width < 1200) interval = 60;
-    if (period == 24) interval = (interval * 4).round();
-    if (period == 48) interval = (interval * 8).round();
+    switch (period) {
+      case 1:
+        interval = (interval).round();
+        break;
+      case 3:
+        interval = (interval * 3).round();
+        break;
+      case 6:
+        interval = (interval * 6).round();
+        break;
+      case 12:
+        interval = (interval * 12).round();
+        break;
+      case 24:
+        interval = (interval * 24).round();
+        break;
+      case 48:
+        interval = (interval * 48).round();
+        break;
+    }
+
+    if (width > 800 && width < 1200) {
+      interval = (interval / 2).round();
+    }
+    if (width >= 1200) {
+      interval = (interval / 4).round();
+    }
+
     return interval;
   }
 }
