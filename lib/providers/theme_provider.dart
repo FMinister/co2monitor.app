@@ -31,7 +31,6 @@ class ThemeNotifier extends _$ThemeNotifier {
     } else {
       themeMode = MyTheme(isDark: prefs.getBool(prefKey)!);
     }
-
     state = AsyncValue.data(themeMode);
 
     return themeMode;

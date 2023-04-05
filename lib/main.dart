@@ -13,15 +13,26 @@ void main() {
   );
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
-  void onTabTheme(MyTheme theme, WidgetRef ref) {
+  @override
+  MyAppState createState() => MyAppState();
+}
+
+class MyAppState extends ConsumerState<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(themeNotifierProvider);
+  }
+
+  void onTabTheme(MyTheme theme) {
     ref.read(themeNotifierProvider.notifier).setTheme(!theme.isDark);
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final themeProv = ref.watch(themeNotifierProvider);
 
     return MaterialApp(
@@ -36,36 +47,47 @@ class MyApp extends ConsumerWidget {
         loading: () =>
             ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('CO2Monitor'),
-          actions: <Widget>[
-            themeProv.when(
-              data: (theme) => IconButton(
-                onPressed: () {
-                  onTabTheme(theme, ref);
-                },
-                icon: theme.isDark
-                    ? Icon(
-                        Icons.light_mode,
-                        color: Theme.of(context).colorScheme.primary,
-                      )
-                    : Icon(
-                        Icons.dark_mode,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-              ),
-              error: (err, _) => Icon(
-                Icons.error,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              loading: () => CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.primary,
-              ),
+      home: Consumer(
+        builder: (context, _, __) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('CO2Monitor'),
+              actions: <Widget>[
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.refresh,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                themeProv.when(
+                  data: (theme) => IconButton(
+                    onPressed: () {
+                      onTabTheme(theme);
+                    },
+                    icon: theme.isDark
+                        ? Icon(
+                            Icons.light_mode,
+                            color: Theme.of(context).colorScheme.primary,
+                          )
+                        : Icon(
+                            Icons.dark_mode,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                  ),
+                  error: (err, _) => Icon(
+                    Icons.error,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  loading: () => CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-        body: const LineChartScreen(),
+            body: const LineChartScreen(),
+          );
+        },
       ),
     );
   }
