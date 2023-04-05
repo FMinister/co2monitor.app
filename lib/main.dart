@@ -36,16 +36,19 @@ class MyAppState extends ConsumerState<MyApp> {
   }
 
   Future<void> _onTabRefresh(BuildContext context) async {
-    final messageProv =
-        ref.read(messageStateNotifierProvider(context).notifier);
-    messageProv.showLoadingSnackBar(context);
-    ref.read(dataProvider.notifier).getData().then((value) {
-      messageProv.hideSnackBar(context);
-      messageProv.showSuccessSnackBar(context, "Data successfully refreshed");
-    }).catchError((err) {
-      messageProv.hideSnackBar(context);
-      messageProv.showErrorSnackBar(context, "Data could not be loaded.\n$err");
-    });
+    ref
+        .read(messageStateNotifierProvider.notifier)
+        .showSuccessSnackBar(context, "test");
+    // final messageProv =
+    //     ref.read(messageStateNotifierProvider(context).notifier);
+    // messageProv.showLoadingSnackBar(context);
+    // ref.read(dataProvider.notifier).getData().then((value) {
+    //   messageProv.hideSnackBar(context);
+    //   messageProv.showSuccessSnackBar(context, "Data successfully refreshed");
+    // }).catchError((err) {
+    //   messageProv.hideSnackBar(context);
+    //   messageProv.showErrorSnackBar(context, "Data could not be loaded.\n$err");
+    // });
   }
 
   @override
@@ -54,6 +57,7 @@ class MyAppState extends ConsumerState<MyApp> {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      scaffoldMessengerKey: MessageStateNotifier.scaffoldKey,
       title: "CO2Monitor",
       theme: themeProv.when(
         data: (theme) => theme.isDark
