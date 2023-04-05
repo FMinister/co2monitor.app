@@ -1,5 +1,6 @@
 import 'package:co2app/providers/theme_provider.dart';
 import 'package:co2app/screens/line_chart_screen.dart';
+import 'package:co2app/widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -85,6 +86,7 @@ class MyAppState extends ConsumerState<MyApp> {
                 ),
               ],
             ),
+            drawer: const AppDrawer(),
             body: const LineChartScreen(),
           );
         },
