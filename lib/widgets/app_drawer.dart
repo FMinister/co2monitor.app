@@ -1,9 +1,8 @@
+import 'package:co2app/providers/period_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/message_provider.dart';
-
-class AppDrawer extends StatefulWidget {
+class AppDrawer extends ConsumerStatefulWidget {
   const AppDrawer({super.key});
 
   @override
@@ -12,9 +11,10 @@ class AppDrawer extends StatefulWidget {
 
 class AppDrawerState extends ConsumerState<AppDrawer> {
   final periods = [1, 3, 6, 12, 24, 48];
-  var _isLoading = false;
 
-  Future<void> onTabPeriod(int period) async {}
+  Future<void> onTabPeriod(int period, BuildContext context) async {
+    await ref.read(periodNotifierProvider.notifier).setPeriod(period);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,31 +48,30 @@ class AppDrawerState extends ConsumerState<AppDrawer> {
             color: Theme.of(context).colorScheme.outline,
           ),
           ListView.builder(
-              shrinkWrap: true,
-              itemCount: periods.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: Icon(
-                    Icons.update,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                  title: Text(
-                    "${periods[index]} ${periods[index] > 1 ? "hours" : "hour"}",
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16),
-                  ),
-                  onTap: () async => await onTabPeriod(periods[index]),
-                );
-              }),
-          if (_isLoading)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
+            shrinkWrap: true,
+            itemCount: periods.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                leading: Icon(
+                  Icons.update,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                title: Text(
+                  "${periods[index]} ${periods[index] > 1 ? "hours" : "hour"}",
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
+                ),
+                onTap: () async {
+                  await onTabPeriod(periods[index], context);
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                  }
+                },
+              );
+            },
+          ),
         ],
       ),
     );

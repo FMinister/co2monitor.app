@@ -45,19 +45,26 @@ class Data extends _$Data {
   }
 
   Future<List<Co2Data>> getData() async {
+    print("Get data");
     final period = await ref
         .watch(periodNotifierProvider.selectAsync((data) => data.period));
     state = const AsyncValue.loading();
-    final url = Uri.http(
-      apiUrl,
-      "/api/CO2AndTempDataByHour/$period",
-    );
-    final response = await http.get(url);
-    final data = co2DataFromJson(response.body);
+    try {
+      final url = Uri.http(
+        apiUrl,
+        "/api/CO2AndTempDataByHour/$period",
+      );
+      final response = await http.get(url);
+      final data = co2DataFromJson(response.body);
 
-    state = AsyncValue.data(data);
+      state = AsyncValue.data(data);
 
-    return data;
+      return data;
+    } catch (err) {
+      state = AsyncError(err, StackTrace.current);
+
+      rethrow;
+    }
   }
 
   Future<void> updateData(Co2Data latestData) async {
@@ -79,12 +86,18 @@ class LatestData extends _$LatestData {
       apiUrl,
       "/api/latestData",
     );
-    final response = await http.get(url);
-    final latestData = latestCo2DataFromJson(response.body);
+    try {
+      final response = await http.get(url);
+      final latestData = latestCo2DataFromJson(response.body);
 
-    state = AsyncValue.data(latestData);
+      state = AsyncValue.data(latestData);
 
-    return latestData;
+      return latestData;
+    } catch (err) {
+      state = AsyncError(err, StackTrace.current);
+
+      rethrow;
+    }
   }
 
   Future<Co2Data> updateLatestData() async {
@@ -93,12 +106,18 @@ class LatestData extends _$LatestData {
       apiUrl,
       "/api/latestData",
     );
-    final response = await http.get(url);
-    final latestData = latestCo2DataFromJson(response.body);
+    try {
+      final response = await http.get(url);
+      final latestData = latestCo2DataFromJson(response.body);
 
-    state = AsyncValue.data(latestData);
+      state = AsyncValue.data(latestData);
 
-    return latestData;
+      return latestData;
+    } catch (err) {
+      state = AsyncError(err, StackTrace.current);
+
+      rethrow;
+    }
   }
 }
 

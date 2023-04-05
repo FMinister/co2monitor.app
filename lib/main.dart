@@ -1,3 +1,6 @@
+import 'package:co2app/providers/data_provider.dart';
+import 'package:co2app/providers/message_provider.dart';
+import 'package:co2app/providers/period_provider.dart';
 import 'package:co2app/providers/theme_provider.dart';
 import 'package:co2app/screens/line_chart_screen.dart';
 import 'package:co2app/widgets/app_drawer.dart';
@@ -32,6 +35,19 @@ class MyAppState extends ConsumerState<MyApp> {
     ref.read(themeNotifierProvider.notifier).setTheme(!theme.isDark);
   }
 
+  Future<void> _onTabRefresh(BuildContext context) async {
+    final messageProv =
+        ref.read(messageStateNotifierProvider(context).notifier);
+    messageProv.showLoadingSnackBar(context);
+    ref.read(dataProvider.notifier).getData().then((value) {
+      messageProv.hideSnackBar(context);
+      messageProv.showSuccessSnackBar(context, "Data successfully refreshed");
+    }).catchError((err) {
+      messageProv.hideSnackBar(context);
+      messageProv.showErrorSnackBar(context, "Data could not be loaded.\n$err");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProv = ref.watch(themeNotifierProvider);
@@ -55,7 +71,9 @@ class MyAppState extends ConsumerState<MyApp> {
               title: const Text('CO2Monitor'),
               actions: <Widget>[
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _onTabRefresh(context);
+                  },
                   icon: Icon(
                     Icons.refresh,
                     color: Theme.of(context).colorScheme.primary,

@@ -45,29 +45,6 @@ class LineChartScreenState extends ConsumerState<LineChartScreen> {
     super.dispose();
   }
 
-  // Future<void> _onTabRefresh(BuildContext context) async {
-  //   final messageProvider =
-  //       Provider.of<MessageProvider>(context, listen: false);
-  //   final dataProvider = Provider.of<DataProvider>(context, listen: false);
-
-  //   messageProvider.hideSnackBar(context);
-  //   try {
-  //     messageProvider.showLoadingSnackBar(context);
-  //     Future.wait([
-  //       dataProvider.fetchLatestData(),
-  //       dataProvider.fetchAndSetData(),
-  //     ]);
-  //     if (context.mounted) {
-  //       messageProvider.showSuccessSnackBar(
-  //           context, "Data successfully refreshed!");
-  //     }
-  //   } catch (error) {
-  //     messageProvider.showErrorSnackBar(context, error.toString());
-  //   } finally {
-  //     messageProvider.hideSnackBar(context);
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     final dataProv = ref.watch(dataProvider);
