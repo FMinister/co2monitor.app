@@ -18,6 +18,18 @@ jobs:
                   sudo apt-get install -y ninja-build libgtk-3-dev
             - run: flutter config --enable-linux-desktop
             - run: flutter build linux
+            - name: Create Release
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: ${{ github.ref }}
+                  release_name: Release ${{ github.ref }}
+                  body: |
+                      Changes in this Release
+                  draft: false
+                  prerelease: false
 
     build-and-release-windows:
         runs-on: windows-latest
@@ -28,6 +40,18 @@ jobs:
                   channel: "beta"
             - run: flutter config --enable-windows-desktop
             - run: flutter build windows
+            - name: Create Release
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: ${{ github.ref }}
+                  release_name: Release ${{ github.ref }}
+                  body: |
+                      Changes in this Release
+                  draft: false
+                  prerelease: false
 
     build-and-release-android:
         runs-on: ubuntu-latest
@@ -43,3 +67,15 @@ jobs:
             - run: flutter pub get
             - run: flutter build apk
             - run: flutter build appbundle
+            - name: Create Release
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: ${{ github.ref }}
+                  release_name: Release ${{ github.ref }}
+                  body: |
+                      Changes in this Release
+                  draft: false
+                  prerelease: false
