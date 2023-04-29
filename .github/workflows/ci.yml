@@ -6,94 +6,71 @@ on:
             - main
 
 jobs:
-    build-and-release-linux:
-        runs-on: ubuntu-latest
+    build-and-release:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os: [ubuntu-latest, windows-latest]
+                channel: [stable, beta]
         steps:
             - uses: actions/checkout@v3
-            - uses: actions/cache@v3
-              with:
-                  path: ~/.pub-cache
-                  key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-                  restore-keys: |
-                      ${{ runner.os }}-pub-cache-
             - uses: subosito/flutter-action@v2
               with:
-                  channel: "stable"
-            - run: |
+                  channel: ${{ matrix.channel }}
+            - if: matrix.os == 'ubuntu-latest'
+              run: |
                   sudo apt-get update -y
                   sudo apt-get install -y ninja-build libgtk-3-dev
-            - run: flutter config --enable-linux-desktop
-            - run: flutter build linux
-            - name: Create Release
+                  flutter config --enable-linux-desktop
+                  flutter build linux
+              env:
+                  PUB_CACHE: /root/.pub-cache
+            - if: matrix.os == 'windows-latest'
+              run: |
+                  flutter config --enable-windows-desktop
+                  flutter build windows
+              env:
+                  PUB_CACHE: C:\hostedtoolcache\windows\flutter\stable-3.7.12\bin\cache\.pub-cache
+            - if: matrix.os == 'ubuntu-latest' && matrix.channel == 'stable'
+              run: |
+                  flutter pub get
+                  flutter build apk
+                  flutter build appbundle
+              env:
+                  PUB_CACHE: /root/.pub-cache
+            - if: matrix.os == 'ubuntu-latest' && matrix.channel == 'beta'
+              run: |
+                  flutter pub get
+                  flutter build apk --split-per-abi
+                  flutter build appbundle --no-shrink
+              env:
+                  PUB_CACHE: /root/.pub-cache
+            - uses: actions/create-release@v1
+              if: matrix.os == 'ubuntu-latest'
               id: create_release
-              uses: actions/create-release@v1
               env:
                   GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
               with:
                   tag_name: ${{ github.ref }}
-                  release_name: Release Linux ${{ github.ref }}
-                  body: |
-                      Changes in this Release
+                  release_name: ${{ github.ref }}
+                  body: Changes in this Release
                   draft: false
                   prerelease: false
-
-    build-and-release-windows:
-        runs-on: windows-latest
-        steps:
-            - uses: actions/checkout@v3
-            - uses: actions/cache@v3
+            - uses: actions/upload-release-asset@v1
+              if: matrix.os == 'ubuntu-latest'
               with:
-                  path: ~/.pub-cache
-                  key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-                  restore-keys: |
-                      ${{ runner.os }}-pub-cache-
-            - uses: subosito/flutter-action@v2
-              with:
-                  channel: "beta"
-            - run: flutter config --enable-windows-desktop
-            - run: flutter build windows
-            - name: Create Release
-              id: create_release
-              uses: actions/create-release@v1
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: app-release.apk
+                  asset_name: app-release.apk
+                  asset_content_type: application/vnd.android.package-archive
               env:
                   GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
+            - uses: actions/upload-release-asset@v1
+              if: matrix.os == 'ubuntu-latest'
               with:
-                  tag_name: ${{ github.ref }}
-                  release_name: Release Windows ${{ github.ref }}
-                  body: |
-                      Changes in this Release
-                  draft: false
-                  prerelease: false
-
-    build-and-release-android:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v3
-            - uses: actions/cache@v3
-              with:
-                  path: ~/.pub-cache
-                  key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-                  restore-keys: |
-                      ${{ runner.os }}-pub-cache-
-            - uses: actions/setup-java@v2
-              with:
-                  distribution: "zulu"
-                  java-version: "11"
-            - uses: subosito/flutter-action@v2
-              with:
-                  channel: "stable"
-            - run: flutter pub get
-            - run: flutter build apk
-            - run: flutter build appbundle
-            - name: Create Release
-              id: create_release
-              uses: actions/create-release@v1
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: app-release.aab
+                  asset_name: app-release.aab
+                  asset_content_type: application/octet-stream
               env:
                   GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
-              with:
-                  tag_name: ${{ github.ref }}
-                  release_name: Release Android ${{ github.ref }}
-                  body: |
-                      Changes in this Release
-                  draft: false
-                  prerelease: false
