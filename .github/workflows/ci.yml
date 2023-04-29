@@ -31,7 +31,7 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
               with:
                   tag_name: ${{ github.ref }}
-                  release_name: Release ${{ github.ref }}
+                  release_name: Release Linux ${{ github.ref }}
                   body: |
                       Changes in this Release
                   draft: false
@@ -59,7 +59,7 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
               with:
                   tag_name: ${{ github.ref }}
-                  release_name: Release ${{ github.ref }}
+                  release_name: Release Windows ${{ github.ref }}
                   body: |
                       Changes in this Release
                   draft: false
@@ -92,7 +92,7 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
               with:
                   tag_name: ${{ github.ref }}
-                  release_name: Release ${{ github.ref }}
+                  release_name: Release Android ${{ github.ref }}
                   body: |
                       Changes in this Release
                   draft: false
