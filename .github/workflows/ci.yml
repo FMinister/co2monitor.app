@@ -10,6 +10,12 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
+            - uses: actions/cache@v2
+              with:
+                  path: ~/.pub-cache
+                  key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pub-cache-
             - uses: subosito/flutter-action@v2
               with:
                   channel: "stable"
@@ -35,6 +41,12 @@ jobs:
         runs-on: windows-latest
         steps:
             - uses: actions/checkout@v3
+            - uses: actions/cache@v2
+              with:
+                  path: ~/.pub-cache
+                  key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pub-cache-
             - uses: subosito/flutter-action@v2
               with:
                   channel: "beta"
@@ -57,6 +69,12 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
+            - uses: actions/cache@v2
+              with:
+                  path: ~/.pub-cache
+                  key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pub-cache-
             - uses: actions/setup-java@v2
               with:
                   distribution: "zulu"
