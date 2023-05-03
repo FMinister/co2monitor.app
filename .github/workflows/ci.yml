@@ -1,0 +1,75 @@
+name: Flutter CI
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    build-and-release:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os: [ubuntu-latest, windows-latest]
+                channel: [stable, beta]
+        steps:
+            - uses: actions/checkout@v3
+            - uses: subosito/flutter-action@v2
+              with:
+                  channel: ${{ matrix.channel }}
+            - if: matrix.os == 'ubuntu-latest'
+              run: |
+                  sudo apt-get install -y ninja-build libgtk-3-dev
+                  flutter config --enable-linux-desktop
+                  flutter build linux
+              env:
+                  PUB_CACHE: /root/.pub-cache
+            - if: matrix.os == 'windows-latest'
+              run: |
+                  flutter config --enable-windows-desktop
+                  flutter build windows
+              env:
+                  PUB_CACHE: C:\hostedtoolcache\windows\flutter\stable-3.7.12\bin\cache\.pub-cache
+            - if: matrix.os == 'ubuntu-latest' && matrix.channel == 'stable'
+              run: |
+                  flutter pub get
+                  flutter build apk
+                  flutter build appbundle
+              env:
+                  PUB_CACHE: /root/.pub-cache
+            - if: matrix.os == 'ubuntu-latest' && matrix.channel == 'beta'
+              run: |
+                  flutter pub get
+                  flutter build apk --split-per-abi
+                  flutter build appbundle --no-shrink
+              env:
+                  PUB_CACHE: /root/.pub-cache
+            - uses: actions/create-release@v1
+              if: matrix.os == 'ubuntu-latest'
+              id: create_release
+              env:
+                  GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
+              with:
+                  tag_name: ${{ github.ref }}
+                  release_name: ${{ github.ref }}
+                  body: Changes in this Release
+                  draft: false
+                  prerelease: false
+            - uses: actions/upload-release-asset@v1
+              if: matrix.os == 'ubuntu-latest'
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: app-release.apk
+                  asset_name: app-release.apk
+                  asset_content_type: application/vnd.android.package-archive
+              env:
+                  GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
+            - uses: actions/upload-release-asset@v1
+              if: matrix.os == 'ubuntu-latest'
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: app-release.aab
+                  asset_name: app-release.aab
+                  asset_content_type: application/octet-stream
+              env:
+                  GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
