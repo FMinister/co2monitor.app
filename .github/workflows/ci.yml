@@ -39,7 +39,7 @@ jobs:
               with:
                   files: |
                       build/app/outputs/flutter-apk/app-release.apk
-                      build/linux/x64/release/bundle/co2app
+                      build/linux/release/bundle/co2app
                       build/windows/runner/release/co2app.exe
                   tag_name: ${{ github.ref }}
                   title: Release CO2App
