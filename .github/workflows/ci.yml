@@ -6,53 +6,43 @@ on:
             - main
 
 jobs:
-    build_and_release:
+    build:
         runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v2
 
-            - name: Setup Flutter
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Set up Flutter
               uses: subosito/flutter-action@v2
               with:
-                  channel: "stable"
                   flutter-version: "3.7.11"
 
-            - name: Enable desktop support for Linux
-              run: flutter config --enable-linux-desktop
+            - name: Install dependencies
+              run: flutter pub get
 
-            - name: Enable desktop support for Windows
-              run: flutter config --enable-windows-desktop
+            - name: Build Linux
+              run: flutter build linux
 
-            - name: Build app for Linux, Windows, and Android
-              run: flutter build linux windows apk
+            - name: Build APK
+              run: flutter build apk
 
-            - name: Create release
-              id: create_release
-              uses: actions/create-release@v1
+            - name: Set up Java
+              uses: actions/setup-java@v2
+              with:
+                  java-version: "12.x"
+
+            - name: Build Windows
+              run: flutter build windows
+
+            - name: Create Release
+              uses: softprops/action-gh-release@v1
+              with:
+                  files:
+                      - build/linux/release/bundle.tar.gz
+                      - build/app/outputs/flutter-apk/app-release.apk
+                      - build/windows/runner/Release/runner.exe
+                  tag_name: ${{ github.ref }}
+                  title: Release ${{ github.ref }}
+                  body: Automated release created by GitHub Actions
               env:
                   GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
-              with:
-                  tag_name: v0.1.0
-                  release_name: Release v0.1.0
-                  body: "First release"
-                  draft: false
-                  prerelease: false
-
-            - name: Upload Linux app
-              uses: actions/upload-artifact@v2
-              with:
-                  name: linux
-                  path: build/linux
-
-            - name: Upload Windows app
-              uses: actions/upload-artifact@v2
-              with:
-                  name: windows
-                  path: build/windows
-
-            - name: Upload Android app
-              uses: actions/upload-artifact@v2
-              with:
-                  name: apk
-                  path: build/app/outputs/flutter-apk/app-release.apk
