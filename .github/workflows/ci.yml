@@ -33,16 +33,16 @@ jobs:
                   PUB_CACHE: C:\hostedtoolcache\windows\flutter\stable-3.7.12\bin\cache\.pub-cache
             - if: matrix.os == 'ubuntu-latest' && matrix.channel == 'stable'
               run: |
+                  sudo chown -R $USER:$USER $HOME/.pub-cache
                   flutter pub get
-                  sudo chown -R $USER:$USER /root/.pub-cache
                   flutter build apk
                   flutter build appbundle
               env:
                   PUB_CACHE: /root/.pub-cache
             - if: matrix.os == 'ubuntu-latest' && matrix.channel == 'beta'
               run: |
+                  sudo chown -R $USER:$USER $HOME/.pub-cache
                   flutter pub get
-                  sudo chown -R $USER:$USER /root/.pub-cache
                   flutter build apk --split-per-abi
                   flutter build appbundle --no-shrink
               env:
