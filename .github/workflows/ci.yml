@@ -1,4 +1,4 @@
-name: Flutter CI
+name: Build and Release Flutter App
 
 on:
     push:
@@ -6,75 +6,53 @@ on:
             - main
 
 jobs:
-    build-and-release:
-        runs-on: ${{ matrix.os }}
-        strategy:
-            matrix:
-                os: [ubuntu-latest, windows-latest]
-                channel: [stable, beta]
+    build_and_release:
+        runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - uses: subosito/flutter-action@v2
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Setup Flutter
+              uses: subosito/flutter-action@v2
               with:
-                  channel: ${{ matrix.channel }}
-            - if: matrix.os == 'ubuntu-latest'
-              run: |
-                  sudo apt-get update -y
-                  sudo apt-get install -y ninja-build libgtk-3-dev
-                  flutter config --enable-linux-desktop
-                  flutter build linux
-              env:
-                  PUB_CACHE: /root/.pub-cache
-            - if: matrix.os == 'windows-latest'
-              run: |
-                  flutter config --enable-windows-desktop
-                  flutter build windows
-              env:
-                  PUB_CACHE: C:\hostedtoolcache\windows\flutter\stable-3.7.12\bin\cache\.pub-cache
-            - if: matrix.os == 'ubuntu-latest' && matrix.channel == 'stable'
-              run: |
-                  sudo chown -R $USER:$USER $HOME/.pub-cache
-                  flutter pub get
-                  sudo chown -R $USER:$USER /root/.pub-cache
-                  flutter build apk
-                  flutter build appbundle
-              env:
-                  PUB_CACHE: /root/.pub-cache
-            - if: matrix.os == 'ubuntu-latest' && matrix.channel == 'beta'
-              run: |
-                  sudo chown -R $USER:$USER $HOME/.pub-cache
-                  flutter pub get
-                  sudo chown -R $USER:$USER /root/.pub-cache
-                  flutter build apk --split-per-abi
-                  flutter build appbundle --no-shrink
-              env:
-                  PUB_CACHE: /root/.pub-cache
-            - uses: actions/create-release@v1
-              if: matrix.os == 'ubuntu-latest'
+                  channel: "stable"
+                  flutter-version: "3.7.11"
+
+            - name: Enable desktop support for Linux
+              run: flutter config --enable-linux-desktop --no-analytics
+
+            - name: Enable desktop support for Windows
+              run: flutter config --enable-windows-desktop --no-analytics
+
+            - name: Build app for Linux, Windows, and Android
+              run: flutter build linux windows apk --no-analytics
+
+            - name: Create release
               id: create_release
+              uses: actions/create-release@v1
               env:
                   GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
               with:
-                  tag_name: ${{ github.ref }}
-                  release_name: ${{ github.ref }}
-                  body: Changes in this Release
+                  tag_name: v0.1.0
+                  release_name: Release v0.1.0
+                  body: "First release"
                   draft: false
                   prerelease: false
-            - uses: actions/upload-release-asset@v1
-              if: matrix.os == 'ubuntu-latest'
+
+            - name: Upload Linux app
+              uses: actions/upload-artifact@v2
               with:
-                  upload_url: ${{ steps.create_release.outputs.upload_url }}
-                  asset_path: app-release.apk
-                  asset_name: app-release.apk
-                  asset_content_type: application/vnd.android.package-archive
-              env:
-                  GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
-            - uses: actions/upload-release-asset@v1
-              if: matrix.os == 'ubuntu-latest'
+                  name: linux
+                  path: build/linux
+
+            - name: Upload Windows app
+              uses: actions/upload-artifact@v2
               with:
-                  upload_url: ${{ steps.create_release.outputs.upload_url }}
-                  asset_path: app-release.aab
-                  asset_name: app-release.aab
-                  asset_content_type: application/octet-stream
-              env:
-                  GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
+                  name: windows
+                  path: build/windows
+
+            - name: Upload Android app
+              uses: actions/upload-artifact@v2
+              with:
+                  name: apk
+                  path: build/app/outputs/flutter-apk/app-release.apk
