@@ -35,6 +35,7 @@ jobs:
               run: |
                   sudo chown -R $USER:$USER $HOME/.pub-cache
                   flutter pub get
+                  sudo chown -R $USER:$USER /root/.pub-cache
                   flutter build apk
                   flutter build appbundle
               env:
@@ -43,6 +44,7 @@ jobs:
               run: |
                   sudo chown -R $USER:$USER $HOME/.pub-cache
                   flutter pub get
+                  sudo chown -R $USER:$USER /root/.pub-cache
                   flutter build apk --split-per-abi
                   flutter build appbundle --no-shrink
               env:
