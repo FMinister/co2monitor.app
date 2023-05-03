@@ -7,42 +7,29 @@ on:
 
 jobs:
     build:
-        runs-on: ubuntu-latest
-
+        runs-on: windows-latest
         steps:
             - uses: actions/checkout@v2
-
             - name: Set up Flutter
-              uses: subosito/flutter-action@v2
+              uses: subosito/flutter-action@v1
               with:
                   flutter-version: "3.7.11"
-
             - name: Install dependencies
               run: flutter pub get
-
-            - name: Build Linux
-              run: flutter build linux
-
-            - name: Build APK
+            - name: Build APK for Android
               run: flutter build apk
-
-            - name: Set up Java
-              uses: actions/setup-java@v2
-              with:
-                  java-version: "12.x"
-
-            - name: Build Windows
+            - name: Build App Bundle for Android
+              run: flutter build appbundle
+            - name: Build EXE for Windows
               run: flutter build windows
-
-            - name: Create Release
+            - name: Create release
               uses: softprops/action-gh-release@v1
               with:
-                  files:
-                      - build/linux/release/bundle.tar.gz
-                      - build/app/outputs/flutter-apk/app-release.apk
-                      - build/windows/runner/Release/runner.exe
+                  files: |
+                      build/app/outputs/flutter-apk/app-release.apk
+                      build/app/outputs/bundle/release/app.aab
+                      build/windows/runner/Release/MyApp.exe
                   tag_name: ${{ github.ref }}
                   title: Release ${{ github.ref }}
-                  body: Automated release created by GitHub Actions
               env:
                   GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
