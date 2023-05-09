@@ -3,16 +3,10 @@ name: Build and Release Flutter App
 on: push
 
 jobs:
-    build:
-        runs-on: windows-latest
+    build-android:
+        runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
-
-            - name: Setup Java
-              uses: actions/setup-java@v3
-              with:
-                  distribution: "zulu"
-                  java-version: "17"
 
             - name: Set up Flutter
               uses: subosito/flutter-action@v1
@@ -23,22 +17,63 @@ jobs:
               run: flutter pub get
 
             - name: Build APK for Android
-              run: flutter build apk
+              run: flutter build apk --release
 
-            - name: Build EXE for Windows
-              run: flutter build windows
-
-            - name: Create release
-              uses: softprops/action-gh-release@v1
+            - name: Archive Release
+              uses: thedoctor0/zip-release@master
               with:
-                  files: |
-                      build/app/outputs/flutter-apk/app-release.apk
-                      build/windows/runner/release/co2app.exe
-                  tag_name: ${{ github.ref }}
+                  type: "zip"
+                  filename: CO2App-${{github.ref_name}}-android.zip
+                  directory: build/app/outputs/flutter-apk/
+
+            - name: Android Release
+              uses: softprops/action-gh-release@v1
               env:
                   GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
+              with:
+                  files: build/app/outputs/flutter-apk/CO2App-${{github.ref_name}}-android.zip
 
-    build-and-release-windows:
+    build-linux:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Set up Flutter
+              uses: subosito/flutter-action@v1
+              with:
+                  flutter-version: "3.7.11"
+
+            - name: Install dependencies
+              run: sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+
+            - name: Install project dependencies
+              run: flutter pub get
+
+            - name: Generate intermediates
+              run: flutter pub run build_runner build --delete-conflicting-outputs
+
+            - name: Enable linux build
+              run: flutter config --enable-linux-desktop
+
+            - name: Build artifacts
+              run: flutter build linux --release
+
+            - name: Archive Release
+              uses: thedoctor0/zip-release@master
+              with:
+                  type: "zip"
+                  filename: CO2App-${{github.ref_name}}-linux.zip
+                  directory: build/linux/x64/release/bundle
+
+            - name: Linux Release
+              uses: softprops/action-gh-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
+              with:
+                  files: build/linux/x64/release/bundle/CO2App-${{github.ref_name}}-linux.zip
+
+    build-windows:
         runs-on: windows-latest
 
         steps:
