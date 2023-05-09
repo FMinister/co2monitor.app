@@ -38,6 +38,45 @@ jobs:
                       build/app/outputs/flutter-apk/app-release.apk
                       build/windows/runner/release/co2app.exe
                   tag_name: ${{ github.ref }}
-                  title: Release CO2App
               env:
                   GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
+
+    build-and-release-windows:
+        runs-on: windows-latest
+
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Setup Java
+              uses: actions/setup-java@v3
+              with:
+                  distribution: "zulu"
+                  java-version: "17"
+
+            - name: Set up Flutter
+              uses: subosito/flutter-action@v1
+              with:
+                  flutter-version: "3.7.11"
+
+            - name: Install project dependencies
+              run: flutter pub get
+
+            - name: Enable windows build
+              run: flutter config --enable-windows-desktop
+
+            - name: Build artifacts
+              run: flutter build windows --release
+
+            - name: Archive Release
+              uses: thedoctor0/zip-release@master
+              with:
+                  type: "zip"
+                  filename: CO2App-${{github.ref_name}}-windows.zip
+                  directory: build/windows/runner/Release
+
+            - name: Windows Release
+              uses: softprops/action-gh-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
+              with:
+                  files: build/windows/runner/Release/CO2App-${{github.ref_name}}-windows.zip
