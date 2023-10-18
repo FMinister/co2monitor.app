@@ -26,11 +26,12 @@ class AppDrawerState extends ConsumerState<AppDrawer> {
               "Set time period",
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onBackground,
+                fontSize: MediaQuery.of(context).size.height * 0.01 * 2,
               ),
             ),
             iconTheme: IconThemeData(
               color: Theme.of(context).colorScheme.secondary,
-              size: 30,
+              size: MediaQuery.of(context).size.height * 0.01 * 3,
             ),
             leading: Builder(
               builder: (BuildContext context) {
@@ -62,7 +63,8 @@ class AppDrawerState extends ConsumerState<AppDrawer> {
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                         fontWeight: FontWeight.bold,
-                        fontSize: 16),
+                        fontSize:
+                            MediaQuery.of(context).size.height * 0.01 * 1.7),
                   ),
                   onTap: () async {
                     await onTabPeriod(periods[index], context);
