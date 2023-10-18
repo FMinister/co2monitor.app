@@ -123,7 +123,7 @@ class Co2LineChartWidget extends ConsumerWidget {
                         )
                         .toList(),
                     isCurved: false,
-                    dotData: FlDotData(show: false),
+                    dotData: const FlDotData(show: false),
                     color: Colors.green.withOpacity(0.5),
                   ),
                   LineChartBarData(
@@ -136,7 +136,7 @@ class Co2LineChartWidget extends ConsumerWidget {
                         )
                         .toList(),
                     isCurved: false,
-                    dotData: FlDotData(show: false),
+                    dotData: const FlDotData(show: false),
                     color: Colors.orange.withOpacity(0.5),
                   ),
                   LineChartBarData(
@@ -149,7 +149,7 @@ class Co2LineChartWidget extends ConsumerWidget {
                         )
                         .toList(),
                     isCurved: false,
-                    dotData: FlDotData(show: false),
+                    dotData: const FlDotData(show: false),
                     color: Colors.red.withOpacity(0.5),
                   ),
                 ],

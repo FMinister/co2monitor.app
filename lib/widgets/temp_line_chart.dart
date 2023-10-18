@@ -112,7 +112,7 @@ class TempLineChartWidget extends ConsumerWidget {
                         .toList(),
                     barWidth: 4,
                     isCurved: false,
-                    dotData: FlDotData(show: false),
+                    dotData: const FlDotData(show: false),
                     color: Theme.of(context).colorScheme.secondary,
                   ),
                 ],
