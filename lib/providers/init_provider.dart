@@ -16,6 +16,11 @@ class InitProvider {
   final String apiUrl;
   final String apiKey;
 
+  // @override
+  // Future<InitProvider> build() async {
+  //   return await getInit();
+  // }
+
   Future<InitProvider> getInit() async {
     var init = InitProvider(
       wasInit: false,
@@ -37,4 +42,11 @@ class InitProvider {
 
     return init;
   }
+
+  // Future<void> setInit(bool wasInit, String apiUrl, String apiKey) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   prefs.setBool("wasInit", wasInit);
+  //   prefs.setString("apiUrl", apiUrl);
+  //   prefs.setString("apiKey", apiKey);
+  // }
 }

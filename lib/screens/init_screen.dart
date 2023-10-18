@@ -1,4 +1,5 @@
 import 'package:co2app/components/color_schemes.dart';
+import 'package:co2app/providers/init_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,7 +25,9 @@ class _InitScreenState extends ConsumerState<InitScreen> {
             ),
             body: Center(
                 child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                // ref.read(initProvider.notifier).setInit(true, "", "");
+              },
               child: const Text('Init'),
             )),
           );

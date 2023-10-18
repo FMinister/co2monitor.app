@@ -25,6 +25,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     return Consumer(
       builder: (context, ref, _) {
         final AsyncValue<InitProvider> initProv = ref.watch(initProvider);
+
         return Center(
             child: switch (initProv) {
           AsyncData() =>
