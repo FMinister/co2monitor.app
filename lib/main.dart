@@ -44,9 +44,14 @@ class MyAppState extends ConsumerState<MyApp> {
         messageProv.showSuccessSnackBar(context, "Data successfully refreshed");
       }
     } catch (err) {
-      messageProv.showErrorSnackBar(context, "Data could not be loaded.\n$err");
+      if (context.mounted) {
+        messageProv.showErrorSnackBar(
+            context, "Data could not be loaded.\n$err");
+      }
     } finally {
-      messageProv.hideSnackBar(context);
+      if (context.mounted) {
+        messageProv.hideSnackBar(context);
+      }
     }
   }
 
