@@ -29,7 +29,7 @@ class Co2Data {
   factory Co2Data.fromRawJson(String str) => Co2Data.fromJson(json.decode(str));
 
   factory Co2Data.fromJson(Map<String, dynamic> json) => Co2Data(
-        date: DateTime.parse(json["created_at"]),
+        date: DateTime.parse(json["created_at"]).toLocal(),
         temp: json["temp"]?.toDouble(),
         co2: json["co2"],
         location: json["location_id"],
