@@ -30,9 +30,7 @@ class _MyAppState extends ConsumerState<MyApp> {
             child: switch (initProv) {
           AsyncData() =>
             initProv.value.wasInit ? const MainScreen() : const InitScreen(),
-          AsyncError() => const Text(
-              "ooops",
-            ),
+          AsyncError() => const InitScreen(),
           _ => const CircularProgressIndicator(
               strokeWidth: 40,
             ),
