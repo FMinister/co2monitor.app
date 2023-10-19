@@ -1,8 +1,7 @@
-import 'package:co2app/helpers/config.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final setInitStateProvider =
+final initStateProvider =
     AsyncNotifierProvider.autoDispose<InitStateProvider, InitState>(
   InitStateProvider.new,
 );

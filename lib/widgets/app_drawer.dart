@@ -93,7 +93,7 @@ class AppDrawerState extends ConsumerState<AppDrawer> {
                   fontSize: MediaQuery.of(context).size.height * 0.01 * 1.7),
             ),
             onTap: () {
-              ref.read(setInitStateProvider.notifier).resetInitState();
+              ref.read(initStateProvider.notifier).resetInitState();
             },
           ),
         ],
