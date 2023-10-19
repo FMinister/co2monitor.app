@@ -15,24 +15,34 @@ class _InitScreenState extends ConsumerState<InitScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Init",
-      theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
-      home: Consumer(
-        builder: (context, _, __) {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Init'),
-            ),
-            body: Center(
-                child: ElevatedButton(
-              onPressed: () {
-                ref.read(initStateProvider.notifier).setInitState(true, "", "");
-              },
-              child: const Text('Init'),
-            )),
-          );
-        },
+      home: Scaffold(
+        backgroundColor: Colors.grey[300],
+        body: Column(children: [
+          // TODO: Add Form for API URL and API Key
+        ]),
       ),
     );
+
+    // return MaterialApp(
+    //   debugShowCheckedModeBanner: false,
+    //   title: "Init",
+    //   theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
+    //   home: Consumer(
+    //     builder: (context, _, __) {
+    //       return Scaffold(
+    //         appBar: AppBar(
+    //           title: const Text('Init'),
+    //         ),
+    //         body: Center(
+    //             child: ElevatedButton(
+    //           onPressed: () {
+    //             ref.read(initStateProvider.notifier).setInitState(true, "", "");
+    //           },
+    //           child: const Text('Init'),
+    //         )),
+    //       );
+    //     },
+    //   ),
+    // );
   }
 }
