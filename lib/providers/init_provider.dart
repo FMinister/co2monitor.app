@@ -25,11 +25,7 @@ class InitState {
 class InitStateProvider extends AutoDisposeAsyncNotifier<InitState> {
   @override
   Future<InitState> build() async {
-    return InitState(
-      wasInit: false,
-      apiUrl: "",
-      apiKey: "",
-    );
+    return await getInitState();
   }
 
   Future<InitState> getInitState() async {
