@@ -1,6 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+const String prefKeyWasInit = "wasInit";
+const String prefKeyApiUrl = "apiUrl";
+const String prefKeyApiKey = "apiKey";
+
 final initStateProvider =
     AsyncNotifierProvider.autoDispose<InitStateProvider, InitState>(
   InitStateProvider.new,
@@ -35,15 +39,15 @@ class InitStateProvider extends AutoDisposeAsyncNotifier<InitState> {
       apiKey: "",
     );
     final prefs = await SharedPreferences.getInstance();
-    if (!prefs.containsKey("wasInit")) {
-      prefs.setBool("wasInit", value.wasInit);
-      prefs.setString("apiUrl", value.apiUrl);
-      prefs.setString("apiKey", value.apiKey);
+    if (!prefs.containsKey(prefKeyWasInit)) {
+      prefs.setBool(prefKeyWasInit, value.wasInit);
+      prefs.setString(prefKeyApiUrl, value.apiUrl);
+      prefs.setString(prefKeyApiKey, value.apiKey);
     } else {
       value = InitState(
-        wasInit: prefs.getBool("wasInit") ?? false,
-        apiUrl: prefs.getString("apiUrl") ?? "",
-        apiKey: prefs.getString("apiKey") ?? "",
+        wasInit: prefs.getBool(prefKeyWasInit) ?? false,
+        apiUrl: prefs.getString(prefKeyApiUrl) ?? "",
+        apiKey: prefs.getString(prefKeyApiKey) ?? "",
       );
     }
 
@@ -57,9 +61,9 @@ class InitStateProvider extends AutoDisposeAsyncNotifier<InitState> {
       apiKey: apiKey,
     );
     final prefs = await SharedPreferences.getInstance();
-    prefs.setBool("wasInit", wasInit);
-    prefs.setString("apiUrl", apiUrl);
-    prefs.setString("apiKey", apiKey);
+    prefs.setBool(prefKeyWasInit, wasInit);
+    prefs.setString(prefKeyApiUrl, apiUrl);
+    prefs.setString(prefKeyApiKey, apiKey);
 
     state = AsyncData(value);
   }
@@ -71,9 +75,9 @@ class InitStateProvider extends AutoDisposeAsyncNotifier<InitState> {
       apiKey: "",
     );
     final prefs = await SharedPreferences.getInstance();
-    prefs.setBool("wasInit", value.wasInit);
-    prefs.setString("apiUrl", value.apiUrl);
-    prefs.setString("apiKey", value.apiKey);
+    prefs.setBool(prefKeyWasInit, value.wasInit);
+    prefs.setString(prefKeyApiUrl, value.apiUrl);
+    prefs.setString(prefKeyApiKey, value.apiKey);
 
     state = AsyncData(value);
   }
