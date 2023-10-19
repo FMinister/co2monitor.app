@@ -24,7 +24,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, _) {
-        final AsyncValue<InitProvider> initProv = ref.watch(initProvider);
+        final AsyncValue<InitState> initProv = ref.watch(setInitStateProvider);
 
         return Center(
             child: switch (initProv) {

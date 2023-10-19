@@ -1,12 +1,14 @@
+import 'package:co2app/helpers/config.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final initProvider = FutureProvider.autoDispose((ref) async {
-  return await InitProvider().getInit();
-});
+final setInitStateProvider =
+    AsyncNotifierProvider.autoDispose<InitStateProvider, InitState>(
+  InitStateProvider.new,
+);
 
-class InitProvider {
-  InitProvider({
+class InitState {
+  InitState({
     this.wasInit = false,
     this.apiUrl = "",
     this.apiKey = "",
@@ -15,38 +17,65 @@ class InitProvider {
   final bool wasInit;
   final String apiUrl;
   final String apiKey;
+}
 
-  // @override
-  // Future<InitProvider> build() async {
-  //   return await getInit();
-  // }
+class InitStateProvider extends AutoDisposeAsyncNotifier<InitState> {
+  @override
+  Future<InitState> build() async {
+    return InitState(
+      wasInit: false,
+      apiUrl: "",
+      apiKey: "",
+    );
+  }
 
-  Future<InitProvider> getInit() async {
-    var init = InitProvider(
+  Future<InitState> getInitState() async {
+    var value = InitState(
       wasInit: false,
       apiUrl: "",
       apiKey: "",
     );
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey("wasInit")) {
-      prefs.setBool("wasInit", init.wasInit);
-      prefs.setString("apiUrl", "");
-      prefs.setString("apiKey", "");
+      prefs.setBool("wasInit", value.wasInit);
+      prefs.setString("apiUrl", value.apiUrl);
+      prefs.setString("apiKey", value.apiKey);
     } else {
-      init = InitProvider(
+      value = InitState(
         wasInit: prefs.getBool("wasInit") ?? false,
         apiUrl: prefs.getString("apiUrl") ?? "",
         apiKey: prefs.getString("apiKey") ?? "",
       );
     }
 
-    return init;
+    return value;
   }
 
-  // Future<void> setInit(bool wasInit, String apiUrl, String apiKey) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   prefs.setBool("wasInit", wasInit);
-  //   prefs.setString("apiUrl", apiUrl);
-  //   prefs.setString("apiKey", apiKey);
-  // }
+  Future<void> setInitState(bool wasInit, String apiUrl, String apiKey) async {
+    var value = InitState(
+      wasInit: wasInit,
+      apiUrl: apiUrl,
+      apiKey: apiKey,
+    );
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool("wasInit", wasInit);
+    prefs.setString("apiUrl", apiUrl);
+    prefs.setString("apiKey", apiKey);
+
+    state = AsyncData(value);
+  }
+
+  Future<void> resetInitState() async {
+    var value = InitState(
+      wasInit: false,
+      apiUrl: "",
+      apiKey: "",
+    );
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool("wasInit", value.wasInit);
+    prefs.setString("apiUrl", value.apiUrl);
+    prefs.setString("apiKey", value.apiKey);
+
+    state = AsyncData(value);
+  }
 }

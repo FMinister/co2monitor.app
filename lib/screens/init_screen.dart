@@ -26,7 +26,9 @@ class _InitScreenState extends ConsumerState<InitScreen> {
             body: Center(
                 child: ElevatedButton(
               onPressed: () {
-                // ref.read(initProvider.notifier).setInit(true, "", "");
+                ref
+                    .read(setInitStateProvider.notifier)
+                    .setInitState(true, "", "");
               },
               child: const Text('Init'),
             )),
