@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:co2app/helpers/config.dart';
+import 'package:co2app/providers/init_provider.dart';
 import 'package:co2app/providers/period_provider.dart';
 import "package:http/http.dart" as http;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -46,7 +46,15 @@ class Data extends _$Data {
   Future<List<Co2Data>> getData() async {
     final period = await ref
         .watch(periodNotifierProvider.selectAsync((data) => data.period));
+    final apiUrl =
+        await ref.watch(initStateProvider.selectAsync((data) => data.apiUrl));
+    final apiKey =
+        await ref.watch(initStateProvider.selectAsync((data) => data.apiKey));
     state = const AsyncValue.loading();
+    if (apiUrl == "" || apiKey == "") {
+      state = const AsyncValue.data([]);
+      return [];
+    }
     try {
       final url = Uri.parse(
         "$apiUrl/api/co2data/1/search?period=${period}h",
@@ -81,9 +89,27 @@ class LatestData extends _$LatestData {
 
   Future<Co2Data> getLatestData() async {
     state = const AsyncValue.loading();
+    final apiUrl =
+        await ref.watch(initStateProvider.selectAsync((data) => data.apiUrl));
+    final apiKey =
+        await ref.watch(initStateProvider.selectAsync((data) => data.apiKey));
     final url = Uri.parse(
       "$apiUrl/api/co2data/1/latest",
     );
+    if (apiUrl == "" || apiKey == "") {
+      state = AsyncValue.data(Co2Data(
+        date: DateTime.now(),
+        temp: 0,
+        co2: 0,
+        location: 0,
+      ));
+      return Co2Data(
+        date: DateTime.now(),
+        temp: 0,
+        co2: 0,
+        location: 0,
+      );
+    }
     try {
       final response = await http.get(url, headers: {
         "X-API-KEY": apiKey,
@@ -102,9 +128,27 @@ class LatestData extends _$LatestData {
 
   Future<Co2Data> updateLatestData() async {
     state = const AsyncValue.loading();
+    final apiUrl =
+        await ref.watch(initStateProvider.selectAsync((data) => data.apiUrl));
+    final apiKey =
+        await ref.watch(initStateProvider.selectAsync((data) => data.apiKey));
     final url = Uri.parse(
       "$apiUrl/api/co2data/1/latest",
     );
+    if (apiUrl == "" || apiKey == "") {
+      state = AsyncValue.data(Co2Data(
+        date: DateTime.now(),
+        temp: 0,
+        co2: 0,
+        location: 0,
+      ));
+      return Co2Data(
+        date: DateTime.now(),
+        temp: 0,
+        co2: 0,
+        location: 0,
+      );
+    }
     try {
       final response = await http.get(url, headers: {
         "X-API-KEY": apiKey,

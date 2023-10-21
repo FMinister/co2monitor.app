@@ -72,8 +72,8 @@ class InitStateProvider extends AutoDisposeAsyncNotifier<InitState> {
     );
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool(prefKeyWasInit, value.wasInit);
-    prefs.setString(prefKeyApiUrl, value.apiUrl);
-    prefs.setString(prefKeyApiKey, value.apiKey);
+    // prefs.setString(prefKeyApiUrl, value.apiUrl);
+    // prefs.setString(prefKeyApiKey, value.apiKey);
 
     state = AsyncData(value);
   }

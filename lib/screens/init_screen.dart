@@ -2,7 +2,6 @@ import 'package:co2app/components/color_schemes.dart';
 import 'package:co2app/providers/init_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:math' as math;
 
 class InitScreen extends ConsumerStatefulWidget {
   const InitScreen({super.key});
