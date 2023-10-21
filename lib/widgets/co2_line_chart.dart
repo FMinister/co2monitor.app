@@ -92,7 +92,7 @@ class Co2LineChartWidget extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.only(
               left: 10,
-              right: 28,
+              right: 10,
               top: 20,
               bottom: 5,
             ),
@@ -110,7 +110,7 @@ class Co2LineChartWidget extends ConsumerWidget {
                         .toList(),
                     barWidth: 4,
                     isCurved: false,
-                    dotData: FlDotData(show: false),
+                    dotData: const FlDotData(show: false),
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   LineChartBarData(
@@ -123,7 +123,7 @@ class Co2LineChartWidget extends ConsumerWidget {
                         )
                         .toList(),
                     isCurved: false,
-                    dotData: FlDotData(show: false),
+                    dotData: const FlDotData(show: false),
                     color: Colors.green.withOpacity(0.5),
                   ),
                   LineChartBarData(
@@ -136,7 +136,7 @@ class Co2LineChartWidget extends ConsumerWidget {
                         )
                         .toList(),
                     isCurved: false,
-                    dotData: FlDotData(show: false),
+                    dotData: const FlDotData(show: false),
                     color: Colors.orange.withOpacity(0.5),
                   ),
                   LineChartBarData(
@@ -149,7 +149,7 @@ class Co2LineChartWidget extends ConsumerWidget {
                         )
                         .toList(),
                     isCurved: false,
-                    dotData: FlDotData(show: false),
+                    dotData: const FlDotData(show: false),
                     color: Colors.red.withOpacity(0.5),
                   ),
                 ],
@@ -166,31 +166,32 @@ class Co2LineChartWidget extends ConsumerWidget {
                         getTitlesWidget: _bottomTitleWidget),
                   ),
                   leftTitles: AxisTitles(
-                    axisNameSize: 30,
-                    axisNameWidget: const Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "CO2",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                    // axisNameSize: 30,
+                    // axisNameWidget: Align(
+                    //   alignment: Alignment.center,
+                    //   child: Text(
+                    //     "CO2",
+                    //     style: TextStyle(
+                    //       fontSize:
+                    //           MediaQuery.of(context).size.height * 0.01 * 1.7,
+                    //       fontWeight: FontWeight.bold,
+                    //     ),
+                    //   ),
+                    // ),
                     sideTitles: SideTitles(
                         showTitles: true,
                         interval: 500,
                         reservedSize: 40,
                         getTitlesWidget: _leftTitleWidget),
                   ),
-                  topTitles: AxisTitles(
+                  topTitles: const AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),
                   rightTitles: AxisTitles(
                     sideTitles: SideTitles(
                         showTitles: true,
                         interval: 500,
-                        reservedSize: 50,
+                        reservedSize: 40,
                         getTitlesWidget: _leftTitleWidget),
                   ),
                 ),

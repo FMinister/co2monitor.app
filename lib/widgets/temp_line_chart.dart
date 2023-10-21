@@ -94,7 +94,7 @@ class TempLineChartWidget extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.only(
               left: 10,
-              right: 28,
+              right: 10,
               top: 20,
               bottom: 5,
             ),
@@ -112,7 +112,7 @@ class TempLineChartWidget extends ConsumerWidget {
                         .toList(),
                     barWidth: 4,
                     isCurved: false,
-                    dotData: FlDotData(show: false),
+                    dotData: const FlDotData(show: false),
                     color: Theme.of(context).colorScheme.secondary,
                   ),
                 ],
@@ -129,31 +129,32 @@ class TempLineChartWidget extends ConsumerWidget {
                         getTitlesWidget: _bottomTitleWidget),
                   ),
                   leftTitles: AxisTitles(
-                    axisNameSize: 30,
-                    axisNameWidget: const Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Temperature",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                    // axisNameSize: 30,
+                    // axisNameWidget: Align(
+                    //   alignment: Alignment.center,
+                    //   child: Text(
+                    //     "Temperature",
+                    //     style: TextStyle(
+                    //       fontSize:
+                    //           MediaQuery.of(context).size.height * 0.01 * 1.7,
+                    //       fontWeight: FontWeight.bold,
+                    //     ),
+                    //   ),
+                    // ),
                     sideTitles: SideTitles(
                         showTitles: true,
                         interval: 5,
-                        reservedSize: 50,
+                        reservedSize: 40,
                         getTitlesWidget: _leftTitleWidget),
                   ),
-                  topTitles: AxisTitles(
+                  topTitles: const AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),
                   rightTitles: AxisTitles(
                     sideTitles: SideTitles(
                         showTitles: true,
                         interval: 5,
-                        reservedSize: 50,
+                        reservedSize: 40,
                         getTitlesWidget: _leftTitleWidget),
                   ),
                 ),

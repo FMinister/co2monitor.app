@@ -19,7 +19,8 @@ class MessageStateNotifier extends _$MessageStateNotifier {
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Theme.of(context).colorScheme.primary,
-            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            fontSize: MediaQuery.of(context).size.height * 0.01 * 2,
           ),
         ),
         duration: const Duration(seconds: 3),
@@ -36,7 +37,8 @@ class MessageStateNotifier extends _$MessageStateNotifier {
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Theme.of(context).colorScheme.error,
-            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            fontSize: MediaQuery.of(context).size.height * 0.01 * 2,
           ),
         ),
         duration: const Duration(seconds: 3),

@@ -59,7 +59,7 @@ class LineChartScreenState extends ConsumerState<LineChartScreen> {
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onBackground,
                   fontWeight: FontWeight.bold,
-                  fontSize: 20,
+                  fontSize: MediaQuery.of(context).size.height * 0.01 * 1.7,
                 ),
               ),
             ),

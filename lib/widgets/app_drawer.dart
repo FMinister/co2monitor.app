@@ -1,3 +1,4 @@
+import 'package:co2app/providers/init_provider.dart';
 import 'package:co2app/providers/period_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,7 +7,7 @@ class AppDrawer extends ConsumerStatefulWidget {
   const AppDrawer({super.key});
 
   @override
-  AppDrawerState createState() => AppDrawerState();
+  ConsumerState<ConsumerStatefulWidget> createState() => AppDrawerState();
 }
 
 class AppDrawerState extends ConsumerState<AppDrawer> {
@@ -26,11 +27,12 @@ class AppDrawerState extends ConsumerState<AppDrawer> {
               "Set time period",
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onBackground,
+                fontSize: MediaQuery.of(context).size.height * 0.01 * 2,
               ),
             ),
             iconTheme: IconThemeData(
               color: Theme.of(context).colorScheme.secondary,
-              size: 30,
+              size: MediaQuery.of(context).size.height * 0.01 * 3,
             ),
             leading: Builder(
               builder: (BuildContext context) {
@@ -62,7 +64,8 @@ class AppDrawerState extends ConsumerState<AppDrawer> {
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                         fontWeight: FontWeight.bold,
-                        fontSize: 16),
+                        fontSize:
+                            MediaQuery.of(context).size.height * 0.01 * 1.7),
                   ),
                   onTap: () async {
                     await onTabPeriod(periods[index], context);
@@ -73,6 +76,25 @@ class AppDrawerState extends ConsumerState<AppDrawer> {
                 );
               },
             ),
+          ),
+          Divider(
+            color: Theme.of(context).colorScheme.outline,
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.restart_alt_rounded,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            title: Text(
+              "Reset Init State",
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: MediaQuery.of(context).size.height * 0.01 * 1.7),
+            ),
+            onTap: () {
+              ref.read(initStateProvider.notifier).resetInitState();
+            },
           ),
         ],
       ),
