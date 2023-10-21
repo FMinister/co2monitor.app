@@ -9,3 +9,8 @@ Download the application from this Repository and install it on your device. Ent
 ## Demonstration
 
 ![Demonstration](co2monitor.gif)
+
+## TODO
+
+- [ ] Add a location selection page
+- [ ] Rewrite providers to use the same structure
