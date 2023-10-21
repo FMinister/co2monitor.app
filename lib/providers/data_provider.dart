@@ -76,6 +76,7 @@ class Data extends _$Data {
 
   Future<void> updateData(Co2Data latestData) async {
     state = const AsyncValue.loading();
+    state.value!.removeAt(0);
     state = AsyncValue.data([...state.value!, latestData]);
   }
 }
