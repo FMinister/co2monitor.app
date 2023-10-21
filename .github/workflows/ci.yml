@@ -3,80 +3,35 @@ name: Build and Release Flutter App
 on:
     push:
         tags:
-            - "**"
+            - "v*.*.*"
 
 jobs:
     build:
-        runs-on: windows-latest
+        runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
+            - name: Checkout
+              uses: actions/checkout@v3
 
             - name: Setup Java
-              uses: actions/setup-java@v3
+              uses: actions/setup-java@v2
               with:
                   distribution: "zulu"
-                  java-version: "21"
+                  java-version: "11"
 
             - name: Set up Flutter
-              uses: subosito/flutter-action@v1
+              uses: subosito/flutter-action@v2
               with:
                   flutter-version: "3.13.6"
-
-            - name: Install dependencies
-              run: flutter pub get
-
-            - name: Build APK for Android
-              run: flutter build apk
-
-            - name: Build EXE for Windows
-              run: flutter build windows
+            - run: flutter pub get
+            - run: flutter test
+            - run: flutter build apk
+            - run: flutter build appbundle
 
             - name: Create release
               uses: softprops/action-gh-release@v1
               with:
                   files: |
                       build/app/outputs/flutter-apk/app-release.apk
-                      build/windows/runner/release/co2app.exe
                   tag_name: ${{ github.ref }}
               env:
                   GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
-
-    build-and-release-windows:
-        runs-on: windows-latest
-
-        steps:
-            - uses: actions/checkout@v3
-
-            - name: Setup Java
-              uses: actions/setup-java@v3
-              with:
-                  distribution: "zulu"
-                  java-version: "21"
-
-            - name: Set up Flutter
-              uses: subosito/flutter-action@v1
-              with:
-                  flutter-version: "3.13.6"
-
-            - name: Install project dependencies
-              run: flutter pub get
-
-            - name: Enable windows build
-              run: flutter config --enable-windows-desktop
-
-            - name: Build artifacts
-              run: flutter build windows --release
-
-            - name: Archive Release
-              uses: thedoctor0/zip-release@master
-              with:
-                  type: "zip"
-                  filename: CO2App-${{github.ref_name}}-windows.zip
-                  directory: build/windows/runner/Release
-
-            - name: Windows Release
-              uses: softprops/action-gh-release@v1
-              env:
-                  GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
-              with:
-                  files: build/windows/runner/Release/CO2App-${{github.ref_name}}-windows.zip
