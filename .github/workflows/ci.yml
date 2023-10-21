@@ -8,6 +8,8 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
         steps:
             - name: Checkout
               uses: actions/checkout@v3
@@ -26,6 +28,9 @@ jobs:
             - run: flutter test
             - run: flutter build apk
             - run: flutter build appbundle
+
+            - name: Debug Token
+              run: echo ${{ secrets.ACTION_SECRET }}
 
             - name: Create release
               uses: softprops/action-gh-release@v1
